@@ -1,5 +1,5 @@
 import React from 'react';
-import './solution.css';
+import './solutions.css';
 
 function SolutionsSection() {
   return (
