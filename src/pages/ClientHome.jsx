@@ -181,20 +181,57 @@ const [imagePreview, setImagePreview] = useState(null);
 
     verifierReservationExistante();
   }, []);
+
+  // --- CHARGER LE BADGE NOTIFICATIONS AU DÉMARRAGE ---
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const token = sessionStorage.getItem('token');
+        const userStr = sessionStorage.getItem('user');
+        if (!token || !userStr) return;
+        const user = JSON.parse(userStr);
+        const monId = user.id_cond || user.id || user.id_utilisateur;
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/notifications/${monId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const unread = (res.data || []).filter(n => n.lu === 0).length;
+        // Ajouter les 2 notifications démo non lues
+        setUnreadNotifications(unread + 2);
+      } catch (e) {
+        // Si pas de notifs en BDD, on met les 2 démo
+        setUnreadNotifications(2);
+      }
+    };
+    fetchUnreadCount();
+  }, []);
+
   // --- CHARGEMENT INITIAL & SUIVI GPS ---
   useEffect(() => {
-    // 1. Suivi GPS en continu avec watchPosition pour une position exacte et fluide
     console.log("🛰️ Lancement du suivi GPS...");
 
     let watchId = null;
 
     if (!navigator.geolocation) {
       console.warn("⚠️ Geolocation non disponible. Position par défaut.");
-      setUserPosition([34.020882, -6.841650]); // Fallback Rabat
+      setUserPosition([34.020882, -6.841650]);
     } else {
-        // HTTP sans localhost bloquera enableHighAccuracy, donc on fallback
         const isSecure = window.isSecureContext;
 
+        // 1. Position rapide d'abord (cache autorisé) pour affichage immédiat
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude, longitude, accuracy } = pos.coords;
+            console.log(`✅ GPS Rapide - Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}, Précision: ${accuracy.toFixed(0)}m`);
+            setUserPosition([latitude, longitude]);
+          },
+          (err) => {
+            console.warn(`⚠️ GPS rapide échoué (code ${err.code}), position par défaut.`);
+            setUserPosition([34.020882, -6.841650]);
+          },
+          { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+        );
+
+        // 2. Puis suivi précis en arrière-plan pour affiner
         watchId = navigator.geolocation.watchPosition(
           (pos) => {
             const { latitude, longitude, accuracy } = pos.coords;
@@ -203,15 +240,11 @@ const [imagePreview, setImagePreview] = useState(null);
           },
           (err) => {
             console.warn(`⚠️ Erreur Suivi GPS (code ${err.code}): ${err.message}`);
-            // Si erreur origine non sécurisée (souvent code 1), utiliser Rabat par défaut
-            if (userPosition === null) {
-              setUserPosition([34.020882, -6.841650]);
-            }
           },
           { 
-            enableHighAccuracy: isSecure, // Ne requiert high accuracy que si HTTPS ou localhost
-            timeout: 10000,
-            maximumAge: 0 
+            enableHighAccuracy: isSecure,
+            timeout: 15000,
+            maximumAge: 10000 
           }
         );
     }
