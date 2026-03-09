@@ -1,0 +1,198 @@
+/* ManagerNotifications.css */
+
+/* Conteneur principal (Dropdown/Panneau) */
+.notifications-panel {
+    position: fixed; /* Fixe pour éviter les problèmes de scroll dans le parent */
+    top: 90px;
+    right: 40px;
+    width: 380px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border: 1px solid #f1f5f9;
+    z-index: 9999; /* Très haut pour passer au-dessus de tout */
+    overflow: hidden;
+    animation: slideDown 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh; /* max hauteur relative à l'écran */
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* En-tête du panneau */
+.notifications-header {
+    background: #f8fafc;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; /* Ne pas réduire l'entête */
+}
+
+.notifications-list {
+    overflow-y: auto; /* Scroll uniquement ici */
+    flex: 1;
+    padding: 10px;
+    margin: 10px;
+    list-style: none;
+    /* Personnalisation Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.notifications-list::-webkit-scrollbar {
+    width: 6px;
+}
+.notifications-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.notifications-list::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+.notification-item {
+    padding: 15px 20px;
+    border: 1px solid #f1f5f9; /* Bordure complète */
+    border-radius: 12px;       /* Arrondi */
+    margin-bottom: 12px;       /* Espacement entre les notifs */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Légère ombre */
+}
+
+/* Suppression de la bordure du bas seule */
+/* .notification-item { border-bottom: ... } -> Remplacé par border complet */
+
+.notif-main-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+}
+
+.notification-details {
+    margin-left: 55px;
+    margin-top: 5px;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    color: #475569;
+    animation: fadeIn 0.3s;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+.detail-row strong { color: #334155; }
+
+/* -- COULEURS VERTES (Style Logo) -- */
+.notification-item.unread {
+    background-color: #f0fdf4; /* Vert très clair (green-50) */
+    border-color: #88a793;     /* Bordure verte claire */
+}
+.notification-item.unread:hover {
+    background-color: #f7f7f7; /* Vert un peu plus foncé au survol */
+}
+
+/* Point vert pour notification non-lue */
+.notification-item.unread::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 8px;
+    height: 8px;
+    background-color: #6a9379; /* Vert vif logo (green-600) */
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px #dff6e7; /* Halo vert */
+}
+
+/* Icône de la notif */
+.notif-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+}
+
+/* Couleurs des icônes selon le type - Mise à jour vers tons verts */
+.notif-icon.reservation { background: #f3f5f4; color: #669477; } /* Vert logo */
+.notif-icon.payment { background: #dcfce7; color: #166534; }     /* Vert foncé */
+.notif-icon.alert { background: #fee2e2; color: #b91c1c; }       /* Rouge (reste alerte) */
+.notif-icon.info { background: #f1f5f9; color: #64748b; }        /* Gris */
+
+/* Contenu texte */
+.notif-content {
+    flex: 1;
+}
+
+.notif-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.notif-message {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 2; /* Standard property for compatibility */
+}
+
+.notif-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 6px;
+    display: block;
+}
+
+/* Pied de panneau */
+.notifications-footer {
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #e2e8f0;
+    background: #fff;
+}
+
+.view-all-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+.view-all-btn:hover { color: #70a88d; }
+
+/* Empty state */
+.no-notifications {
+    padding: 40px 20px;
+    text-align: center;
+    color: #94a3b8;
+}

@@ -1,0 +1,1134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DESIGN GLOBAL - CORRECTION LOGO ET CENTRAGE */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* 1. Reset et base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 2. CONTENEUR ÉLARGI (LA CORRECTION EST ICI) */
+.container {
+  width: 95%; /* Utilise 95% de l'écran */
+  max-width: 1300px; /* Élargi de 1200px à 1300px */
+  margin: 0 auto;
+}
+
+section { padding: 60px 0; }
+a { text-decoration: none; color: inherit; }
+
+/* =========================================
+   1. NAVBAR STYLES (Menu & Logo)
+   ========================================= */
+.navbar {
+  background: white;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky; /* Reste en haut quand on scrolle */
+  top: 0;
+  z-index: 999; /* Toujours au-dessus du reste */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 20px;
+  flex-wrap: nowrap;
+}
+
+.nav-links {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+.nav-links:hover { color: #66ba85; }
+
+/* Active link styling - highlight the current page link in green */
+.nav-links.active {
+  color: #79d099;
+  font-weight: 700;
+  border-bottom: 3px solid #7ed39d;
+  padding-bottom: 5px;
+}
+
+/* Boutons Header (Sign In / Sign Up) */
+.btn-signin {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #8fdbab;
+  font-weight: bold;
+  border: 1px solid #8fdbab;
+  padding: 10px 25px;
+  border-radius: 30px;
+  transition: background 0.3s, color 0.3s;
+
+  
+}
+.btn-signin:hover {
+  background: #d4e0d490;
+  color: rgb(118, 158, 131);
+}
+.btn-signup {
+  background: #89c8a0;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-signup:hover { background: #5d816b; }
+
+/* Éléments cachés sur PC */
+.menu-icon { display: none; } 
+
+.desktop-btn {
+  display: flex;
+  gap: 15px;
+}
+
+/* Boutons du menu mobile - cachés par défaut, visibles uniquement en mobile */
+.mobile-btn { display: none !important; }
+
+/* =========================================
+   2. HERO SECTION (Titre + Carrousel)
+   ========================================= */
+.hero-section {
+  padding: 60px 20px;
+  background: white;
+  min-height: 80vh; /* Prend une bonne hauteur d'écran */
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Empêche les débordements */
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center; /* Centre verticalement */
+  justify-content: space-between;
+  gap: 50px;
+  width: 100%;
+}
+
+/* --- Partie Gauche : Texte --- */
+.hero-left {
+  flex: 1;
+  max-width: 600px;
+  z-index: 2; /* S'assure que le texte est au-dessus */
+}
+
+.hero-left h1 {
+  font-size: 4.1rem; /* Gros titre sur PC */
+  line-height: 1.1;
+  color: #1e293b;
+  margin-bottom: 25px;
+  font-weight: 800;
+}
+
+.hero-left .highlight { color: #93d7ac; }
+
+.hero-left p {
+  font-size: 1.15rem;
+  color: #64748b;
+  margin-bottom: 35px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.btn-hero {
+  background: #7ba88c; /* Vert clair */
+  color: #f2f5f3;
+  padding: 15px 40px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: inline-block;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 15px rgba(134, 239, 172, 0.4);
+}
+
+.btn-hero:hover { transform: translateY(-3px); }
+
+/* --- Partie Droite  --- */
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-container {
+  position: relative;
+  width: 620px;
+  max-width: 700px; /* Largeur max */
+  height: 450px;    /* Hauteur FIXE : toutes les images feront cette taille */
+  /* C'est ici qu'on fait l'arrondi et l'ombre */
+  border-radius: 20px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Une jolie ombre pour le relief */
+  overflow: hidden; /* Important pour que l'image ne dépasse pas des bords arrondis */
+  background-color: #f1f5f9; /* Fond gris clair au cas où l'image charge mal */
+}
+
+.carousel-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* LA MAGIE : 'cover' force l'image à remplir tout le cadre sans se déformer */
+  /* (ça peut couper un peu les bords si l'image est trop large/haute) */
+  object-fit: cover; 
+  
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel-image.active {
+  opacity: 1;
+  transform: scale(1.02); /* Petit zoom sympa quand l'image apparaît */
+  transition: opacity 1s ease-in-out, transform 4s ease;
+}
+
+/* --- Ajustement Mobile --- */
+@media screen and (max-width: 960px) {
+  .carousel-container {
+    height: 300px; /* Moins haut sur téléphone */
+    border-radius: 15px; /* Arrondi un peu plus petit */
+  }
+}
+/* =========================================
+   3. RESPONSIVE MOBILE (Téléphone)
+   ========================================= */
+@media screen and (max-width: 960px) {
+  
+  /* Cacher les boutons du header sur mobile (ils seront dans le menu) */
+  .desktop-btn { display: none !important; }
+  /* --- A. Navbar Mobile (Style Todify) --- */
+  
+  .menu-icon {
+    display: block;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #333;
+    position: absolute;
+    right: 20px; /* Icône burger à droite */
+    top: 25px;
+    z-index: 1001; /* Au-dessus du menu ouvert */
+  }
+
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh; /* Prend tout l'écran */
+    position: fixed;
+    top: 0; /* Commence tout en haut */
+    left: -100%; /* Caché à gauche */
+    opacity: 0;
+    transition: all 0.4s ease;
+    background: white;
+    padding-top: 80px; /* Espace pour ne pas cacher le premier lien */
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  }
+
+  .nav-menu.active {
+    left: 0; /* Apparaît */
+    opacity: 1;
+    z-index: 1000;
+  }
+
+  .nav-item { margin-bottom: 10px; width: 100%; text-align: center; }
+  
+  .nav-links {
+    font-size: 1.5rem; /* Gros liens faciles à cliquer */
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-btn { display: block !important; margin-top: 20px; }
+
+
+  /* --- B. Hero Mobile (Réparations) --- */
+  .hero-section {
+    padding: 30px 20px; /* Moins d'espace */
+    text-align: center; /* Centre tout le texte */
+    display: block; /* Enlève le flex center global pour éviter les bugs */
+  }
+
+  .hero-container {
+    flex-direction: column; /* Empile : Texte en haut, Image en bas */
+    gap: 40px;
+  }
+
+  /* Titre plus petit */
+  .hero-left h1 {
+    font-size: 2.2rem; 
+    margin-top: 10px;
+  }
+
+  /* Paragraphe centré */
+  .hero-left p {
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Image en dessous du bouton */
+  .hero-right {
+    width: 100%;
+    margin-top: 20px; /* Espace entre le bouton et l'image */
+    height: auto; /* Laisse la hauteur s'adapter */
+  }
+
+  .carousel-container {
+    height: 300px; /* Images plus petites sur mobile mais visibles */
+    margin: 0 auto; /* Centre le carrousel */
+  }
+}
+
+/* 6. Testimonials */
+.testimonials { padding: 80px 0; text-align: center; }
+.testimonials h2 { font-size: 2.5rem; margin-bottom: 50px;  color: #1e293b;}
+.testimonials h2 .highlight { color: #98e0b2; }
+.testimonials-wrapper { width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+.testimonials-slider { display: flex; width: max-content; animation: slide 30s linear infinite; }
+.testimonial-card { width: 350px; background: white;border: 1px solid #e6e5e5; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 30px; margin: 0 20px; text-align: left; }
+.testimonial-card p { font-size: 1rem; color: #555; margin-bottom: 20px; }
+.testimonial-card .author { font-weight: 700; font-size: 1.1rem; color: #99dbb1; }
+.testimonial-card .author-icon { width: 50px; height: 50px; border-radius: 50%; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; }
+@keyframes slide { 0% { transform: translateX(0); } 100% { transform: translateX(-1560px); } }
+
+/* --- RESPONSIVE TESTIMONIALS (Mobile) --- */
+@media screen and (max-width: 960px) {
+  
+  /* 1. Réduire l'espace global */
+  .testimonials {
+    padding: 40px 0; /* Moins de vide en haut/bas */
+  }
+
+  /* 2. Réduire le Titre */
+  .testimonials h2 {
+    font-size: 1.8rem; /* Beaucoup plus petit (était 2.5rem) */
+    margin-bottom: 30px;
+    padding: 0 20px; /* Pour pas que ça touche les bords */
+  }
+
+  /* 3. Réduire la taille des cartes */
+  .testimonial-card {
+    width: 260px; /* Plus étroit (était 350px) pour tenir sur petit écran */
+    padding: 20px; /* Moins de "gras" à l'intérieur */
+    margin: 0 10px; /* Rapprocher les cartes */
+  }
+
+  .testimonial-card p {
+    font-size: 0.9rem; /* Texte un peu plus petit */
+  }
+
+  /* 4. Ajuster l'animation pour les petites cartes */
+  /* Comme les cartes sont plus petites, la distance de glissement change */
+  .testimonials-slider {
+    animation: slideMobile 20s linear infinite; /* On utilise une nouvelle animation */
+  }
+}
+
+/* Nouvelle animation calculée pour la taille mobile */
+/* (260px largeur + 20px marge) x 4 cartes = 1120px */
+@keyframes slideMobile {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-1120px); }
+}
+
+/* =========================================
+   AUTHENTIFICATION (Split Screen CORRIGÉ)
+   ========================================= */
+
+.auth-container {
+  min-height: calc(100vh - 100px); /* Ajustement pour éviter le scroll avec la navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fcfdfc; 
+  padding: 20px;
+}
+
+/* La Carte Principale */
+.auth-card {
+  display: flex;
+  flex-direction: row; /* Force la ligne horizontale sur PC */
+  background: white;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 600px; /* IMPORTANT : Force une hauteur pour que l'image apparaisse */
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* GAUCHE : L'Image */
+.auth-image-side {
+  width: 50%; /* Force la largeur */
+  background-image: url('../public/cnx.png'); /* Image de fond */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 100%; /* Prend toute la hauteur disponible */
+}
+
+/* DROITE : Le Formulaire */
+.auth-form-side {
+  width: 50%; /* Force la largeur */
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centre tout horizontalement */
+}
+
+/* Titres */
+.auth-form-side h2 {
+  color: #1e293b;
+  margin-bottom: 5px;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.auth-form-side p {
+  color: #64748b;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Inputs */
+/* =========================================
+   CORRECTION INPUTS (VERSION BLINDÉE)
+   ========================================= */
+
+/* 1. Le Formulaire : Il doit aligner ses enfants verticalement */
+.auth-form {
+  width: 100%; /* Prend toute la largeur de la carte */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espace entre Email et Password */
+}
+
+/* 2. Le Conteneur du Mot de passe (LE COUPABLE HABITUEL) */
+.password-input-container {
+  width: 100% !important; 
+  position: relative;     /* Pour placer l'œil */
+  height: 55px;           /* On fixe la hauteur du conteneur aussi */
+  display: flex;          /* S'assure qu'il remplit l'espace */
+}
+
+/* 3. L'Input (Email ET Password) */
+.auth-input {
+  width: 100%;
+  height: 55px !important; /* Hauteur forcée */
+  padding: 0 15px;         /* Espace texte gauche */
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #f8fafc;
+  color: #1e293b;
+  box-sizing: border-box; 
+  margin: 0;
+}
+
+/* Focus  */
+.auth-input:focus {
+  outline: none;
+  background-color: white;
+  border-color: #99dbb1;
+  box-shadow: 0 0 0 4px rgba(153, 219, 177, 0.3);
+}
+
+/* 4. L'icône Œil */
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Centrage vertical parfait */
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  z-index: 10;
+}
+/* Boutons */
+.btn-primary-auth {
+  background-color: #80b293;
+  color: #f8faf9; /* Vert très foncé pour le contraste */
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.btn-primary-auth:hover {
+  background-color: #73937e;
+}
+
+/* --- NOUVEAU : UPLOAD PROFIL (Rond avec +) --- */
+.profile-upload {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px auto; /* Centré avec marge en bas */
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.profile-upload:hover {
+  transform: scale(1.05);
+}
+
+.profile-upload img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.profile-avatar-display{
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px auto; /* Centré avec marge en bas */
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.profile-avatar-display img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.profile-upload .plus-icon {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  background: #a9cfb7;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+/* Divider & Google */
+.divider { width: 100%; display: flex; align-items: center; margin: 20px 0; color: #94a3b8; font-size: 0.8rem; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+.divider span { padding: 0 10px; }
+
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+  background: white; border: 1px solid #e2e8f0; height: 50px; border-radius: 10px;
+  color: #1e293b; font-weight: 600; cursor: pointer;
+}
+
+.auth-footer { margin-top: 20px; font-size: 0.9rem; color: #64748b; }
+.auth-link { color: #73a183; font-weight: 700; text-decoration: none; margin-left: 5px; }
+
+
+/* --- RESPONSIVE MOBILE --- */
+@media screen and (max-width: 900px) {
+  .auth-card {
+    flex-direction: column; /* Empile verticalement sur mobile */
+    max-width: 450px;
+    min-height: unset; /* Enlève la hauteur fixe */
+  }
+  .auth-input {
+    height: 58px !important; 
+  }
+  .auth-image-side {
+    display: none; /* Cache l'image sur mobile */
+  }
+.auth-form {
+    gap: 8px; /* Espace très réduit entre les inputs */
+  }
+  .auth-form-side {
+    width: 100%; /* Le formulaire prend tout */
+    padding: 20px 15px;
+  }
+}
+/* 8. Section FAQ  */
+.faq-section {
+  background-color: #ffffff; 
+}
+
+.faq-section .container {
+  display: flex; /* Pour aligner le bloc "question" et "contact" */
+  gap: 40px;
+  align-items: flex-start; /* Aligne en haut */
+  max-width: 1200px;
+}
+
+.faq-section .faq-content-left {
+  flex: 1; /* Prend une partie de l'espace */
+  min-width: 350px; /* Pour éviter que le texte ne devienne trop petit */
+  padding-right: 20px;
+}
+
+.faq-section .faq-content-left h2 {
+  text-align: left;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  color: #1e293b;
+}
+
+.faq-section .faq-content-left .sub-heading {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #79cf98; /* Vert foncé pour le petit texte au-dessus */
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.faq-section .faq-content-left .sub-heading::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #79cf98; /* Cercle vert clair */
+}
+
+
+.faq-section .faq-accordion-right {
+  flex: 2; /* Prend deux parties de l'espace */
+}
+
+.faq-item {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0; /* Bordure légère */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Ombre très subtile */
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 25px;
+  cursor: pointer;
+  background: #ffffff;
+}
+
+.faq-question span {
+  font-size: 1.06rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.faq-icon {
+  font-size: 1.5rem;
+  color: #b4e2c6; 
+  transition: transform 0.3s ease;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+  background: #f7f7f7; /* Fond légèrement gris pour la réponse */
+  color: #555;
+  padding: 0 25px;
+  border-top: 1px solid #eee; /* Ligne de séparation */
+}
+
+.faq-answer p {
+  padding: 15px 0; /* Un peu moins de padding que l'ancien */
+  line-height: 1.5;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 200px; /* Ajuste si tes réponses sont plus longues */
+  padding: 0 25px;
+}
+.faq-item.open .faq-icon {
+  transform: rotate(-180deg); 
+}
+
+/* Bloc "Still have a question?" */
+.faq-contact-box {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fdfefe, #ddf7e994);
+  padding: 30px;
+  border: 1px solid #c8f0d1;
+  text-align: center;
+  margin-top: 40px; /* Espace avec le titre FAQ */
+}
+
+.faq-contact-box h3 {
+  font-size: 1.5rem;
+  color: #6bb687;
+  margin-bottom: 15px;
+}
+
+.faq-contact-box p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.faq-contact-box .btn-send-email {
+  background-color: #90cca6; 
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  display: inline-block; /* Pour que le padding fonctionne bien */
+}
+.faq-contact-box .btn-send-email:hover {
+  background-color: #6b9e7d;
+}
+
+/* Responsive pour les petits écrans */
+@media (max-width: 768px) {
+  .faq-section .container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .faq-section .faq-content-left,
+  .faq-section .faq-accordion-right {
+    flex: none; /* Pas de flex sur mobile */
+    width: 100%;
+    padding-right:   10px;
+  }
+  .faq-section .faq-content-left h2 {
+    text-align: center;
+    font-size: 2.1rem;
+  }
+  .faq-section .faq-content-left .sub-heading {
+    justify-content: center;
+  }
+  .faq-contact-box {
+    margin-top: 30px;
+  }
+}
+/* 9. Section About Us (NOUVELLE SECTION) */
+.about-section {
+  padding: 40px 20px;
+  background-color: #ffffff; /* Fond blanc simple */
+}
+
+.about-section .container {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-left {
+  flex: 1; /* Prend la moitié de l'espace */
+}
+
+.about-left .sub-heading {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: #94c2a5; 
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.about-left .sub-heading::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #9ee6b8;
+}
+
+.about-left h2 {
+  font-size: 2.8rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #1e293b;
+}
+.about-left h2 .highlight {
+  color: #99eab7;
+}
+
+.about-left p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: justify;
+  font-weight: 400;
+}
+
+.about-right {
+  flex: 1; /* Prend l'autre moitié */
+}
+
+.about-right video {
+  width: 100%;
+  border-radius: 15px; /* Bords arrondis */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: block;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+  .about-section {
+    padding: 30px 15px;
+  }
+  .about-section .container {
+    flex-direction: column; /* Passe en colonne */
+    gap: 20px;
+  }
+  .about-left h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .about-left .sub-heading {
+    justify-content: center;
+  }
+  .about-left p {
+    margin-bottom: 12px;
+  }
+}
+/* =========================================
+   FOOTER STYLES (Version PC)
+   ========================================= */
+.footer-section {
+  background-color: #799684;
+  color: #f4f5f5; /* Texte gris clair */
+  padding: 60px 20px 20px 20px;
+  font-size: 0.95rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap; /* Permet aux colonnes de passer à la ligne sur mobile */
+  justify-content: space-between;
+  gap: 50px; /* Espace entre les colonnes */
+  margin-bottom: 40px;
+}
+
+.footer-column {
+  flex: 1; /* Prend une part égale de l'espace */
+  min-width: 250px; /* Largeur minimale avant de passer à la ligne */
+  margin-bottom: 20px;
+}
+
+.footer-logo-link {
+  display: inline-block; /* Pour que le lien ne prenne pas toute la largeur */
+  margin-bottom: 20px;
+}
+
+.footer-logo-img {
+  height:250px; /* Taille du logo dans le footer */
+  width: auto;
+  margin-top: -90px;
+  margin-bottom: -120px;
+  margin-left: -60px;
+}
+
+.footer-column h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.footer-column p {
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Liens du footer */
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 12px;
+}
+
+.footer-links ul li a {
+  color: #f9f9f9;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #86efac; /* Vert clair au survol */
+}
+
+/* Icônes Sociales */
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-icons a {
+  color: #e6e7ea;
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: rgb(152, 233, 188);
+}
+
+/* Formulaire de contact (Colonne 3) */
+.footer-contact-form {
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Pour positionner l'image */
+}
+
+.footer-contact-form h3 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-input, .form-textarea {
+  background-color: #a8e0b2cb; /* Fond plus foncé */
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 12px 15px;
+  color: rgb(63, 62, 62);
+  font-size: 1rem;
+  width: 100%;
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: #383a39;
+}
+
+.form-textarea {
+  resize: vertical; /* Permet de redimensionner verticalement */
+  min-height: 80px;
+}
+
+.form-button {
+  background-color: #75ac88; /* Vert clair */
+  color: #eff3f1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 1.09rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%; /* Prend toute la largeur */
+}
+
+.form-button:hover {
+  background-color: #55755d; /* Vert un peu plus foncé */
+}
+
+/* Image Kiosk (Présente sur PC) */
+.footer-kiosk-image {
+  position: absolute;
+  right: -50px; /* Décale l'image un peu sur la droite */
+  bottom: 0px;
+  width: 250px; /* Taille de l'image sur PC */
+  height: auto;
+  opacity: 0.8; /* Légèrement transparente pour se fondre */
+  z-index: 1; /* Pour qu'elle soit derrière le texte */
+}
+
+
+/* Copyright bottom bar */
+.footer-bottom {
+  border-top: 1px solid #626267;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #f8f9fa;
+}
+
+/* =========================================
+   FOOTER RESPONSIVE (Mobile)
+   ========================================= */
+@media screen and (max-width: 768px) { /* On utilise 768px pour les tablettes/mobiles */
+  .footer-container {
+    flex-direction: column; /* Empile les colonnes verticalement */
+    align-items: center; /* Centre les éléments */
+    text-align: center; /* Centre le texte dans chaque colonne */
+    gap: 40px; /* Plus d'espace entre les colonnes */
+  }
+
+  .footer-column {
+    min-width: unset; /* Enlève la largeur minimale */
+    width: 100%; /* Chaque colonne prend toute la largeur */
+    max-width: 400px; /* Limite la largeur pour ne pas être trop étiré sur tablette */
+  }
+
+  /* Cacher l'image du Kiosk sur mobile */
+  .footer-kiosk-image {
+    display: none; 
+  }
+
+  /* Ajustements spécifiques au formulaire sur mobile */
+  .footer-contact-form {
+    align-items: center;
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 350px; /* Pour que le formulaire ne soit pas trop large */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .social-icons {
+    justify-content: center; /* Centre les icônes sociales */
+  }
+}
+/* Style pour le bouton "Voir mot de passe" */
+.password-input-container {
+  position: relative; /* Permet de placer l'icône par rapport à ce bloc */
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Cible spécifiquement les inputs avec la classe utilisée sur les formulaires d'auth */
+.password-input-container .auth-input {
+  width: 100%; /* Même largeur que l'input email */
+  padding-right: 48px; /* Espace pour l'icône à droite */
+  box-sizing: border-box;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 16px;    /* Collé à droite */
+  top: 50%;       /* Centré verticalement */
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;    /* Gris par défaut */
+  font-size: 1.1rem;
+  z-index: 10;
+}
+
+.password-toggle-icon:hover {
+  color: #82b896; /* Vert au survol */
+}
+.input-style {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+}
+.input-style:focus {
+  outline: none;
+  border-color: #16a34a;
+}
+/* =========================================
+   NOUVELLES RÈGLES POUR GÉRER L'AFFICHAGE PC/MOBILE DES IMAGES
+   ========================================= */
+
+/* --- Par défaut (PC) : Cacher l'image mobile --- */
+.responsive-mockup-image {
+  display: none;
+  /* On réinitialise les marges pour le PC pour éviter les bugs cachés */
+  width: 100%;
+  height: auto;
+}
+
+/* --- Par défaut (PC) : Afficher le carrousel --- */
+.desktop-carousel {
+  display: block;
+}
+
+
+/* --- MOBILE : Inverser l'affichage --- */
+@media screen and (max-width: 960px) {
+
+  /* Cacher le carrousel sur mobile */
+  .desktop-carousel {
+    display: none; 
+  }
+
+  /* Afficher l'image du mockup sur mobile */
+  .responsive-mockup-image {
+    display: block;
+    width: 100%; /* Prend toute la largeur disponible */
+    height: auto;
+    
+    /* 1. GESTION DES ESPACES (C'est ici qu'on règle ton problème) */
+    margin-top: -110px;    /* Très peu d'espace avec le bouton au-dessus */
+    margin-bottom: -50px;  /* Pas d'espace en bas */
+    
+    /* 2. AGRANDIR L'IMAGE (L'astuce du Zoom) */
+    /* Cela va grossir l'image de 15% sans toucher au reste */
+    transform: scale(1.15); 
+    transform-origin: top center; /* On zoome depuis le haut */
+  }
+
+  /* Ajustements pour le conteneur hero-right en mobile */
+  .hero-right {
+    height: auto;
+    padding: 0; /* On enlève le padding pour gagner de la place */
+    overflow: visible; /* Important pour laisser le zoom dépasser un peu si besoin */
+  }
+}

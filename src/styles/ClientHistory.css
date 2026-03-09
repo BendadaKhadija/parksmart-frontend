@@ -1,0 +1,589 @@
+/* --- GLOBAL --- */
+.history-container, .detail-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F9F9F9;
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* --- LISTE HISTORIQUE (CARDS) --- */
+.history-card {
+    background: white;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap; /* CRITIQUE : empêche le retour à la ligne qui casse le layout */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow: hidden; /* coupe tout dépassement */
+    min-width: 0;
+}
+
+.card-img-wrapper img {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.card-info {
+    flex: 1;
+    margin-left: 4px;
+    min-width: 0; /* CRITIQUE : sans ça, flex ne peut pas tronquer le texte enfant */
+    overflow: hidden;
+}
+
+.card-info h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    /* Empêche le titre de déborder sur l'image */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.address {
+    font-size: 12px;
+    color: #888;
+    margin: 4px 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.card-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2D3E50;
+    width: 100%;
+    gap: 8px;
+}
+
+.rating { color: #FFA500; }
+
+/* Partie Droite (Durée + Bouton) */
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.duration-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+}
+
+.btn-detail {
+    background-color: #6F9C76;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* --- RESPONSIVE PETITS TÉLÉPHONES --- */
+@media (max-width: 400px) {
+    .history-container, .detail-container {
+        padding: 16px;
+    }
+
+    .page-title {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .history-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+    }
+
+    /* Override inline styles for image wrapper on small screens */
+    .card-img-wrapper {
+        width: 60px !important;
+        height: 60px !important;
+        flex-shrink: 0;
+        margin-right: 0;
+    }
+
+    .card-img-wrapper img {
+        width: 100% !important;
+        height: 100% !important;
+        flex-shrink: 0;
+    }
+    
+    .fallback-text {
+        font-size: 20px !important;
+    }
+
+    .card-info {
+        flex: 1;
+        margin-left: 0;
+        min-width: 0; /* Critical for truncation to work in flex */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .card-info h3 {
+        font-size: 14px;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .address {
+        font-size: 11px;
+        max-width: 100%;
+        white-space: nowrap; /* Prevent wrapping */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: normal;
+        margin-bottom: 4px;
+    }
+
+    .card-price-row {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        width: auto;
+        height: auto;
+        gap: 5px;
+        margin-top: 0;
+    }
+
+    .duration-text {
+        font-size: 10px;
+        white-space: nowrap;
+        margin-bottom: 2px;
+    }
+
+    .btn-detail {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+
+    .btn-write-review {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* --- PAGE DÉTAIL --- */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 20px 0 10px 0;
+}
+
+/* Carte Détail avec Bordure Verte */
+.detail-card {
+    border: 1px solid #6F9C76;
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.detail-card-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.detail-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.detail-text h4 { margin: 0; font-size: 15px; }
+.detail-text p { margin: 0; font-size: 11px; color: #888; }
+.detail-rating { margin-left: auto; font-weight: bold; font-size: 14px; }
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.green-total {
+    color: #6F9C76;
+    font-size: 16px;
+}
+
+/* Payment */
+.payment-box {
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    background: white;
+}
+
+.google-logo {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    color: #4285F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+/* --- SECTION REVIEW --- */
+.reviews-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.rating-big {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rating-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.stars-row {
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+.review-count {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.rating-bars {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.rating-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.star-label {
+    width: 10px;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: bold;
+}
+
+.bar-bg {
+    flex: 1;
+    height: 6px;
+    background-color: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: #6F9C76;
+    border-radius: 3px;
+}
+
+/* --- LISTE AVIS --- */
+.reviews-list-scroll {
+    overflow-y: auto;
+    padding-bottom: 80px; /* Espace pour le bouton */
+}
+
+.review-item-full {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.review-user-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.review-date {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.review-stars-small {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+}
+
+.review-text-content {
+    color: #334155;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- PAGE WRITE REVIEW (Full Screen) --- */
+.write-review-content {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title-center {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+}
+
+.star-input-large {
+    margin-bottom: 40px;
+    display: flex;
+    gap: 15px;
+}
+
+.star-large {
+    font-size: 2.5rem;
+    color: #e2e8f0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-large.full {
+    color: #fbbf24;
+}
+
+.form-box {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.form-box textarea {
+    background-color: #f1f5f9; /* Gris clair comme l'image */
+    border: none;
+    height: 150px;
+}
+
+/* --- BOUTON SUBMIT FIXE EN BAS --- */
+.btn-success-full {
+    width: 100%;
+    background-color: #89af92; /* Vert sombre comme l'image */
+    color: white;
+    padding: 18px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0; /* Carré ou léger radius */
+    /* Position fixed en bas pour Write Review */
+}
+
+.bottom-fixed-action {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+}
+
+.bottom-fixed-action .btn-success-full {
+    border-radius: 12px;
+}
+
+/* Lien pour aller à la page review */
+.review-link-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    align-items: center;
+}
+
+/* --- OVERLAY FLOU (Backdrop Filter) --- */
+.blur-content > *:not(.write-review-overlay) {
+    filter: blur(4px);
+    pointer-events: none;
+    transition: filter 0.3s;
+}
+
+.write-review-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
+    background: rgba(0,0,0,0.3); /* Léger assombrissement */
+    backdrop-filter: blur(3px); /* Flou natif supporté par chrome/safari modern */
+    display: flex;
+    align-items: flex-end;
+    animation: fadeInOverlay 0.3s;
+}
+
+.write-review-sheet {
+    background: #EAF4F0; /* Vert très pâle de l'image */
+    width: 100%;
+    border-radius: 30px 30px 0 0;
+    padding: 24px 24px 0 24px;
+    animation: slideUpSheet 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.sheet-handle {
+    width: 60px;
+    height: 5px;
+    background-color: #BDC3C7;
+    border-radius: 3px;
+    margin-bottom: 30px;
+}
+
+.title-center {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #1e293b;
+}
+
+.star-input-large {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.star-large {
+    font-size: 2.8rem;
+    color: #CBD5E1;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.star-large:hover {
+    transform: scale(1.1);
+}
+
+.star-large.full {
+    color: #FBBF24;
+}
+
+.form-box {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1e293b;
+}
+
+.form-box textarea {
+    width: 100%;
+    background-color: #E2EBE6; /* Légèrement plus foncé que le fond */
+    border: 1px solid #D1DED6;
+    border-radius: 8px;
+    padding: 16px;
+    height: 120px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #334155;
+    resize: none;
+}
+
+.form-box textarea:focus {
+    outline: 2px solid #556B5A;
+    background-color: #fff;
+}
+
+.btn-success-full.no-radius {
+    width: 100%;
+    margin: 0 -24px; /* Pour coller aux bords */
+    width: calc(100% + 48px);
+    padding: 20px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}

@@ -1,0 +1,1712 @@
+/* =========================================
+   FICHIER: src/pages/ClientHome.css (SÉCURISÉ)
+   ========================================= */
+
+/* ------------------------------------------------
+   1. GLOBAL (S'applique à tout le site, on laisse tel quel)
+   ------------------------------------------------ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  /* overscroll-behavior: none;  <-- Desactive pour compatibilité Safari iOS < 16 */
+  touch-action: pan-x pan-y;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+}
+
+/* ------------------------------------------------
+   1.5 ENCAPSULATION (Le bouclier anti-CSS Leak)
+   Toutes les classes en dessous ne s'appliqueront QUE si 
+   elles sont à l'intérieur de .client-home-wrapper
+   ------------------------------------------------ */
+
+.client-home-wrapper .mobile-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.client-home-wrapper .main-content-area {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 70px;
+  background-color: #f8fafc;
+  /* -webkit-overflow-scrolling: touch; Deprecated */
+  transition: filter 0.3s ease;
+}
+
+/* ------------------------------------------------
+   2. SEARCH BAR & MAP
+   ------------------------------------------------ */
+.client-home-wrapper .search-bar-container {
+  position: absolute;
+  top: 20px;
+  left: 3%;
+  width: 93%;
+  background: white;
+  padding: 1px 10px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.client-home-wrapper .search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1.1rem;
+  color: #334155;
+  background: transparent;
+}
+.client-home-wrapper .leaflet-container {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    height: 100% !important;
+    width: 100% !important;
+}
+/* ------------------------------------------------
+   3.5 USER LOCATION ICON GLOW PULSE
+   ------------------------------------------------ */
+@keyframes user-glow-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); /* 15px spread, faded out */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+.user-pulse-marker {
+     animation: user-glow-pulse 2s infinite;
+}
+
+/* --- PARKING PULSE ANIMATION --- */
+.parking-pulse-container {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parking-pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(234, 88, 12, 0.6); /* Orange/Red glow */
+    z-index: 0;
+    animation: parking-pulse-anim 2s infinite ease-out;
+}
+
+@keyframes parking-pulse-anim {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+    }
+    100% {
+        width: 250%; /* Rayonne plus large */
+        height: 250%;
+        opacity: 0;
+    }
+}
+
+/* --- TOOLTIP ROTATIF (Noms des places qui restent droits) --- */
+.custom-tooltip-rotated {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-weight: bold;
+    color: #1e293b;
+    font-size: 13px;
+    text-shadow: 0 1px 2px white, 0 -1px 2px white, 1px 0 2px white, -1px 0 2px white;
+    /* La Magie : On applique la contre-rotation définie par la variable CSS dans le JSX */
+    transform: rotate(calc(-1 * var(--map-rotation, 0deg))) !important;
+    /* On s'assure que la rotation se fait bien autour du centre de l'étiquette */
+    transform-origin: center top !important;
+    transition: transform 0.1s linear;
+    white-space: nowrap;
+    margin-top: 5px;
+}
+.custom-tooltip-rotated::before {
+    display: none !important; /* Cache la flèche par défaut */
+}
+
+
+/* ------------------------------------------------
+   4. BOTTOM NAVIGATION BAR
+   ------------------------------------------------ */
+.client-home-wrapper .bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 6px 0 0 0;
+    /* Gère le safe-area des iPhones avec indicateur home */
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    z-index: 9999;
+}
+
+.client-home-wrapper .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.70rem; /* Légèrement plus petit */
+  cursor: pointer;
+  flex: 1;
+  padding-top: 8px; /* Réduit au lieu de 15px */
+}
+
+.client-home-wrapper .nav-item i {
+  font-size: 1.3rem; /* Légèrement plus petit */
+  margin-bottom: 3px;
+}
+
+.client-home-wrapper .nav-item.active {
+  color: #6da27d;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------
+   4. SLIDE-UP PANEL (Parking Details) - CUSTOM DESIGN
+   ------------------------------------------------ */
+.client-home-wrapper .slide-up-panel {
+  position: absolute;
+  /* On positionne le panel légèrement au dessus de la navbar (bottom: 60px) pour éviter le chevauchement, ou on gère le padding */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #e9f0ea; /* Greenish light background */
+  border-radius: 30px 30px 0 0;
+  box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
+  z-index: 1100;
+  /* On augmente un peu le padding gap en bas pour que le bouton ne touche pas la navbar */
+  padding: 15px 5% 85px 5%;
+  animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 85vh; /* Responsive: Evite qu'il ne cache tout sur un petit écran */
+  overflow-y: auto; /* Permet le scroll interne si nécessaire */
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.client-home-wrapper .drag-handle {
+  width: 50px;
+  height: 5px;
+  background-color: #8c9b90;
+  border-radius: 10px;
+  margin: 5px auto 15px auto;
+  flex-shrink: 0;
+}
+
+.client-home-wrapper .card-image-container {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 2vh; /* Responsive margin au lieu de px fixes */
+  flex-shrink: 0;
+}
+
+.client-home-wrapper .card-img {
+  width: 100%;
+  /* Dimensions fluides adaptées au téléphone */
+  height: 22vh; 
+  min-height: 120px;
+  max-height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.client-home-wrapper .pagination-dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 2vh;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.client-home-wrapper .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid #7c9383;
+  background-color: transparent;
+}
+
+.client-home-wrapper .dot.active {
+  width: 14px;
+  background-color: #7c9383;
+  border-radius: 4px;
+}
+
+.client-home-wrapper .card-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.client-home-wrapper .rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1vh;
+}
+
+.client-home-wrapper .star-icon {
+  color: #fbbf24; /* Golden star */
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+}
+
+.client-home-wrapper .rating-score {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: clamp(0.85rem, 3vw, 0.95rem);
+}
+
+.client-home-wrapper .rating-reviews {
+  color: #64748b;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+}
+
+.client-home-wrapper .panel-title {
+  margin: 5px 0 5px 0;
+  color: #0f172a;
+  /* Taille de police adaptative : clamp(min, pref, max) */
+  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  font-weight: 800;
+  text-align: center;
+}
+
+.client-home-wrapper .panel-address {
+  color: #64748b;
+  margin-bottom: 3vh;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  text-align: center;
+}
+
+.client-home-wrapper .info-row {
+  display: flex;
+  justify-content: center;
+  gap: 5vw; /* Ecart adaptatif */
+  width: 100%;
+  margin-bottom: 3vh;
+}
+
+.client-home-wrapper .info-item {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}
+
+.client-home-wrapper .icon-circle {
+  width: clamp(18px, 5vw, 22px);
+  height: clamp(18px, 5vw, 22px);
+  border-radius: 50%;
+  background-color: #93b39d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+}
+
+.client-home-wrapper .icon-square {
+  width: clamp(18px, 5vw, 22px);
+  height: clamp(18px, 5vw, 22px);
+  border-radius: 4px;
+  background-color: #93b39d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.client-home-wrapper .info-text {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+}
+
+.client-home-wrapper .btn-continue {
+  flex: 1; /* Prend l'espace restant à côté du bouton itinéraire */
+  background-color: #5d7564;
+  color: white;
+  border: none;
+  /* On définit la même hauteur via padding ou height fixe - fixons height pour être sr */
+  height: clamp(50px, 7vh, 60px);
+  padding: 0; /* Remplace le padding pour qu'il s'aligne exactement sur la hauteur */
+  border-radius: 6px;
+  font-size: clamp(1rem, 6vh, 1.1rem);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(93, 117, 100, 0.4);
+  /* Centre le texte à l'intérieur du bouton */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- BOUTON CIRCLAIRE ITINERAIRE (A côté de Continue) --- */
+.client-home-wrapper .round-itinerary-btn {
+  /* On synchronise la hauteur avec le bouton continue */
+  width: clamp(50px, 6vh, 60px);
+  height: clamp(50px, 6vh, 60px);
+  background-color: #6d977a; 
+  color: white; 
+  border: none;
+  border-radius: 30%;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.client-home-wrapper .round-itinerary-btn:active {
+  transform: scale(0.95);
+}
+/* ------------------------------------------------
+   5. GRID OVERLAY (Place Selection) - STRUCTURE GLOBALE
+   ------------------------------------------------ */
+.client-home-wrapper .grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.client-home-wrapper .grid-header {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.client-home-wrapper .btn-back {
+  background: #f1f5f9;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 1.1rem;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.client-home-wrapper .grid-title {
+  color: #1e293b;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.client-home-wrapper .floors-tabs .strong{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  background-color: #475569;
+}
+
+.client-home-wrapper .tab {
+  flex: 1;
+  padding: 14px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 12px;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.client-home-wrapper .tab.active {
+  background: #6da27d;
+  color: white;
+  box-shadow: 0 4px 10px rgba(109, 162, 125, 0.3);
+}
+
+.client-home-wrapper .parking-layout {
+  flex: 1;
+  padding-bottom: 100px;
+}
+
+.client-home-wrapper .grid-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+}
+
+.loading-spots {
+  padding: 20px;
+  text-align: center;
+}
+
+/* ------------------------------------------------
+   DESIGN PARKING (Bandes vertes horizontales)
+   ------------------------------------------------ */
+.client-home-wrapper .parking-layout-container {
+    padding: 10px;
+}
+
+.client-home-wrapper .parking-scroll-area {
+    display: flex;
+    flex-direction: column; 
+    gap: 20px; 
+    overflow-x: auto; 
+    /* -webkit-overflow-scrolling: touch; Deprecated */
+    padding-bottom: 20px;
+/* scrollbar-width: none; Standard but creates warnings on older browsers */
+}
+.client-home-wrapper .parking-scroll-area::-webkit-scrollbar {
+    display: none; /* Cache la barre Chrome/Safari */
+}
+
+/* La bande verte pour chaque rangée */
+.client-home-wrapper .parking-row {
+    background-color: #8cb790;
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+    min-width: max-content; 
+    border-radius: 8px; /* Un petit arrondi sympa pour les extrémités de la rangée */
+}
+
+/* Le conteneur de chaque place */
+.client-home-wrapper .slot-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border-right: 1px dashed rgba(255, 255, 255, 0.7); 
+}
+
+.client-home-wrapper .slot-wrapper.last-slot {
+    border-right: none;
+}
+
+/* --- PLACES OCCUPÉES --- */
+.client-home-wrapper .occupied-spot-wrapper {
+    width: 45px; 
+    height: 85px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.client-home-wrapper .car-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    transform: scale(1.5);
+}
+
+/* --- PLACES LIBRES --- */
+.client-home-wrapper .free-spot {
+    width: 45px; 
+    height: 85px; 
+    background-color: #cddbcc; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4a634e; 
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.client-home-wrapper .free-spot.selected {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 2px solid #2196f3;
+}
+
+/* --- L'INDICATEUR "GLISSEZ" --- */
+.client-home-wrapper .scroll-hint {
+  text-align: right;
+  padding-right: 20px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  animation: swipePulse 2s infinite; 
+}
+
+@keyframes swipePulse {
+  0% { transform: translateX(0); opacity: 0.7; }
+  50% { transform: translateX(8px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 0.7; }
+}
+/* ------------------------------------------------
+   6. PROFILE & MENU
+   ------------------------------------------------ */
+.client-home-wrapper .profile-container, 
+.client-home-wrapper .profile-subpage {
+  padding: 20px 24px;
+  min-height: 100%;
+  background: #fff;
+}
+
+.client-home-wrapper .profile-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  margin-left: -24px;
+  margin-right: -24px;
+  padding: 15px 24px;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 100;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.client-home-wrapper .profile-title {
+  font-size: 1.3rem;
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.client-home-wrapper .btn-back-profile {
+  background: #f1f5f9;
+  border: none;
+  color: #334155;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.client-home-wrapper .btn-back-profile:hover {
+  background: #e2e8f0;
+  transform: translateX(-4px);
+}
+
+.client-home-wrapper .profile-user-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: white;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.client-home-wrapper .avatar-circle {
+  width: 65px;
+  height: 65px;
+  background-color: #6da27d;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(109, 162, 125, 0.3);
+}
+
+.client-home-wrapper .user-text h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.client-home-wrapper .user-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  text-align: left;
+}
+
+.client-home-wrapper .user-text p {
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  word-break: break-all;
+}
+
+.client-home-wrapper .menu-section {
+  margin-bottom: 25px;
+}
+
+.client-home-wrapper .section-title {
+  font-weight: 700;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.client-home-wrapper .menu-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 16px 0;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+}
+
+.client-home-wrapper .menu-item:active {
+  background-color: #f8fafc;
+}
+
+.client-home-wrapper .icon-box {
+  color: #779c82;
+  font-size: 1.2rem;
+  margin-right: 16px;
+  background: #eaf6f0;
+  border-radius: 8px;
+  height: 37px;
+  width: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.client-home-wrapper .icon-box i,
+.client-home-wrapper .icon-box svg,
+.client-home-wrapper .icon-box img {
+  display: block;
+  margin: 0 auto;
+  line-height: 1;
+}
+
+.client-home-wrapper .menu-label {
+  flex: 1;
+  color: #334155;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.client-home-wrapper .arrow {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.client-home-wrapper .form-group {
+  margin-bottom: 20px;
+}
+
+.client-home-wrapper .form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.client-home-wrapper .form-group input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  color: #1e293b;
+  font-size: 1.05rem;
+  background: #f8fafc;
+  transition: all 0.2s;
+}
+
+.client-home-wrapper .form-group input:focus {
+  border-color: #6da27d;
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(109, 162, 125, 0.1);
+}
+
+.client-home-wrapper .btn-continue, 
+.client-home-wrapper .btn-save {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  background: #6da27d;
+  color: white;
+  box-shadow: 0 4px 15px rgba(109, 162, 125, 0.3);
+}
+
+.client-home-wrapper .btn-logout {
+  width: 100%;
+  background-color: #fee2e2;
+  color: #ef4444;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.client-home-wrapper .payment-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  margin-bottom: 15px;
+}
+
+.client-home-wrapper .pay-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.client-home-wrapper .placeholder-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* ------------------------------------------------
+   7. LOGOUT MODAL
+   ------------------------------------------------ */
+.client-home-wrapper .logout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+}
+
+.client-home-wrapper .logout-modal-content {
+  background-color: #8bb19a;
+  padding: 35px 25px;
+  border-radius: 25px;
+  width: 85%;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .logout-modal-content h3 {
+  color: white;
+  font-size: 1.4rem;
+  margin: 0 0 35px 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.client-home-wrapper .logout-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.client-home-wrapper .btn-cancel-logout {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background-color: white;
+  color: #728a7c;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.client-home-wrapper .btn-confirm-logout {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background-color: transparent;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+/* ============================================================
+   CLIENT HISTORY - CSS COMPLET & CORRIGÉ
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. CONTAINERS PRINCIPAUX & LISTE HISTORIQUE
+   ------------------------------------------------------------ */
+.client-home-wrapper .history-list-container, 
+.client-home-wrapper .detail-page-container {
+  padding: 20px;
+  padding-bottom: 100px; 
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.client-home-wrapper .history-title {
+  text-align: center;
+  margin: 20px 0 30px 0;
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.client-home-wrapper .history-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+}
+
+.client-home-wrapper .card-header-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.client-home-wrapper .duration-badge {
+  background-color: #eaf4ef; 
+  color: #6da27d;            
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 20px;       
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.client-home-wrapper .card-content-row { display: flex; gap: 15px; align-items: center; }
+.client-home-wrapper .parking-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+.client-home-wrapper .parking-info { flex: 1; }
+.client-home-wrapper .parking-info .address { color: #94a3b8; font-size: 0.9rem; margin: 0 0 8px 0; }
+.client-home-wrapper .price-rating { display: flex; gap: 15px; font-weight: 600; font-size: 0.9rem; }
+.client-home-wrapper .price { color: #1e293b; }
+.client-home-wrapper .rating { color: #f59e0b; }
+
+.client-home-wrapper .btn-detail-sm {
+  background: #728a7c; color: white; border: none; padding: 10px 18px;
+  border-radius: 10px; font-weight: 600; font-size: 0.85rem; margin-top: 39px; cursor: pointer;
+}
+
+/* ------------------------------------------------------------
+   2. VUE DETAIL
+   ------------------------------------------------------------ */
+.client-home-wrapper .header-nav {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  background: transparent; 
+  box-shadow: none;
+  padding: 0;
+}
+.client-home-wrapper .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.8rem; color: #64748b; font-weight: 600; }
+
+.client-home-wrapper .btn-back-nav {
+  background: #ecf4ef;
+  border: none;
+  color: #49574f;
+  font-size: 1.2rem;
+  width: 45px; height: 45px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  margin-right: 15px;
+}
+
+.client-home-wrapper .header-nav h2 {
+  font-size: 1.4rem; color: #1e293b; margin: 0;
+}
+
+.client-home-wrapper .detail-box {
+  background: white; border: 1px solid #6da27d; border-radius: 20px;
+  padding: 25px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.client-home-wrapper .detail-box h3 { font-size: 1.1rem; color: #1e293b; }
+
+.client-home-wrapper .detail-row-main {
+  display: flex; gap: 15px; margin-bottom: 20px;
+  border-bottom: 2px dashed #e2e8f0; padding-bottom: 20px;
+}
+
+.client-home-wrapper .detail-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+.client-home-wrapper .detail-text h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: #1e293b; }
+.client-home-wrapper .star-badge { color: #f59e0b; font-weight: 700; }
+
+.client-home-wrapper .detail-info-grid { display: flex; flex-direction: column; gap: 15px; }
+.client-home-wrapper .info-row { display: flex; justify-content: space-between; font-size: 1rem; }
+.client-home-wrapper .info-row .label { color: #64748b; font-weight: 500; }
+.client-home-wrapper .info-row .val { color: #1e293b; font-weight: 700; }
+.client-home-wrapper .val.green { color: #22c55e; }
+
+.client-home-wrapper .payment-method-box {
+  background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0;
+}
+
+.client-home-wrapper .btn-outline-reviews {
+  width: 100%; background: white; border: 1px solid #e2e8f0; padding: 18px;
+  border-radius: 14px; color: #1e293b; font-weight: 700;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+/* ------------------------------------------------------------
+   3. VUE REVIEWS (REMOVED - MOVED TO ClientHistory.css)
+   ------------------------------------------------------------ */
+/* ... */
+
+/* --- BARRE DE RÉSERVATION (CHRONO) --- */
+.client-home-wrapper .active-reservation-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: #ffffff;
+    z-index: 1000; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-bottom: 3px solid #81b798;
+}
+
+.client-home-wrapper .timer-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.client-home-wrapper .timer-label {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.client-home-wrapper .timer-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #333;
+    font-family: 'Courier New', monospace; 
+}
+
+.client-home-wrapper .btn-stop-reservation {
+    background: #ef4444; 
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    cursor: pointer;
+}
+
+/* --- ICONE VOITURE --- */
+.client-home-wrapper .car-icon {
+    width: 35px;
+    height: auto;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .car-icon.my-car {
+    filter: drop-shadow(0 0 5px #2ecc71);
+    transform: scale(1.15);
+}
+@keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Classe réutilisable pour animation fade-in */
+.client-home-wrapper .fade-in-element {
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+/* ================================================
+   STYLES POUR LA PAGE "À PROPOS DE PARKSMART"
+   ================================================ */
+
+.client-home-wrapper .about-page {
+    background: white;
+}
+
+.client-home-wrapper .about-section-container {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.client-home-wrapper .about-hero-section {
+    text-align: center;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid rgba(109, 162, 125, 0.2);
+    animation: slideInRight 0.8s ease-out;
+}
+
+.client-home-wrapper .about-icon {
+    font-size: 3.5rem;
+    color: #98c0a4;
+    margin-bottom: 15px;
+    display: block;
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .about-hero-title {
+    font-size: 2rem;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    font-weight: 800;
+}
+
+.client-home-wrapper .about-hero-subtitle {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.client-home-wrapper .about-content {
+    margin-bottom: 30px;
+}
+
+.client-home-wrapper .about-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #9ac3a6;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .about-section:hover {
+    box-shadow: 0 8px 24px rgba(109, 162, 125, 0.15);
+    transform: translateY(-4px);
+}
+
+.client-home-wrapper .about-section-fade-in {
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.client-home-wrapper .about-section:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .about-section:nth-child(2) { animation-delay: 0.2s; }
+.client-home-wrapper .about-section:nth-child(3) { animation-delay: 0.3s; }
+.client-home-wrapper .about-section:nth-child(4) { animation-delay: 0.4s; }
+.client-home-wrapper .about-section:nth-child(5) { animation-delay: 0.5s; }
+
+.client-home-wrapper .about-section-title {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.client-home-wrapper .about-section-text {
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.client-home-wrapper .about-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.client-home-wrapper .about-features-list li {
+    padding: 10px 0;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.client-home-wrapper .about-features-list li:last-child {
+    border-bottom: none;
+}
+
+.client-home-wrapper .about-features-list li i {
+    color: #9bc4a7;
+    font-size: 1.1rem;
+    min-width: 20px;
+}
+
+.client-home-wrapper .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(109, 162, 125, 0.2);
+}
+
+.client-home-wrapper .stat-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out backwards;
+        border: #c4ecd4 solid 0.5px;
+
+}
+
+.client-home-wrapper .stat-item:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .stat-item:nth-child(2) { animation-delay: 0.2s; }
+.client-home-wrapper .stat-item:nth-child(3) { animation-delay: 0.3s; }
+
+.client-home-wrapper .stat-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(109, 162, 125, 0.15);
+}
+
+.client-home-wrapper .stat-number {
+    font-size: 1.8rem;
+    color: #8ec29d;
+    font-weight: 800;
+    display: block;
+}
+
+.client-home-wrapper .stat-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ================================================
+   STYLES POUR LA PAGE "MON PROFIL DÉTAILLÉ"
+   ================================================ */
+
+.client-home-wrapper .profile-detailed {
+    background: white;
+}
+
+.client-home-wrapper .profile-detail-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.client-home-wrapper .profile-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+    animation: slideInRight 0.8s ease-out;
+}
+
+.client-home-wrapper .profile-avatar-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.client-home-wrapper .profile-detail-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 8px 24px rgba(109, 162, 125, 0.2);
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .profile-avatar-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #6da27d 0%, #5b8b6a 100%);
+    border: 4px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 6px 20px rgba(144, 179, 154, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 6px 20px rgba(144, 179, 154, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 8px 28px rgba(144, 179, 154, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.client-home-wrapper .profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.client-home-wrapper .profile-info-item {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.client-home-wrapper .profile-info-item:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .profile-info-item:nth-child(2) { animation-delay: 0.2s; }
+.client-home-wrapper .profile-info-item:nth-child(3) { animation-delay: 0.3s; }
+.client-home-wrapper .profile-info-item:nth-child(4) { animation-delay: 0.4s; }
+
+.client-home-wrapper .profile-info-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.client-home-wrapper .profile-info-value {
+    display: block;
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.client-home-wrapper .profile-stats-section {
+    margin-top: 30px;
+}
+
+.client-home-wrapper .profile-stats-title {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+}
+
+.client-home-wrapper .profile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.client-home-wrapper .profile-stat-box {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.client-home-wrapper .profile-stat-box:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .profile-stat-box:nth-child(2) { animation-delay: 0.2s; }
+
+.client-home-wrapper .profile-stat-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(109, 162, 125, 0.12);
+}
+
+.client-home-wrapper .profile-stat-icon {
+    width: 50px;
+    height: 50px;
+    background: rgb(151, 190, 165);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+}
+
+.client-home-wrapper .profile-stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.client-home-wrapper .profile-stat-number {
+    font-size: 1.3rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.client-home-wrapper .profile-stat-text {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+/* ================================================
+   STYLES POUR LA PAGE "MENTIONS LÉGALES"
+   ================================================ */
+
+.client-home-wrapper .legal-page {
+    background: white;
+}
+
+.client-home-wrapper .legal-content {
+    animation: fadeInUp 0.6s ease-out;
+    padding-bottom: 20px;
+}
+
+.client-home-wrapper .legal-item {
+    margin-bottom: 30px;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.client-home-wrapper .legal-item:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .legal-item:nth-child(2) { animation-delay: 0.2s; }
+.client-home-wrapper .legal-item:nth-child(3) { animation-delay: 0.3s; }
+.client-home-wrapper .legal-item:nth-child(4) { animation-delay: 0.4s; }
+.client-home-wrapper .legal-item:nth-child(5) { animation-delay: 0.5s; }
+
+.client-home-wrapper .legal-item h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.client-home-wrapper .legal-item p {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+/* ================================================
+   STYLES POUR LA PAGE "AIDE & SUPPORT" (ACCORDÉON)
+   ================================================ */
+
+.client-home-wrapper .help-page {
+    background: white;
+}
+
+.client-home-wrapper .help-content {
+    animation: fadeInUp 0.6s ease-out;
+    padding-bottom: 20px;
+}
+
+.client-home-wrapper .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.client-home-wrapper .faq-item {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.client-home-wrapper .faq-item:nth-child(1) { animation-delay: 0.1s; }
+.client-home-wrapper .faq-item:nth-child(2) { animation-delay: 0.2s; }
+.client-home-wrapper .faq-item:nth-child(3) { animation-delay: 0.3s; }
+.client-home-wrapper .faq-item:nth-child(4) { animation-delay: 0.4s; }
+.client-home-wrapper .faq-item:nth-child(5) { animation-delay: 0.5s; }
+.client-home-wrapper .faq-item:nth-child(6) { animation-delay: 0.6s; }
+
+.client-home-wrapper .faq-item.open {
+    box-shadow: 0 8px 24px rgba(109, 162, 125, 0.2);
+}
+
+.client-home-wrapper .faq-question {
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 1rem;
+    background: linear-gradient(90deg, rgba(109,162,125,0.02) 0%, transparent 100%);
+    transition: all 0.3s ease;
+}
+
+.client-home-wrapper .faq-item:hover .faq-question {
+    background: linear-gradient(90deg, rgba(109,162,125,0.06) 0%, transparent 100%);
+}
+
+.client-home-wrapper .faq-question i {
+    font-size: 1.2rem;
+    color: #6da27d;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .faq-question i.rotated {
+    transform: rotate(180deg);
+}
+
+.client-home-wrapper .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                padding 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.client-home-wrapper .faq-item.open .faq-answer {
+    max-height: 500px;
+    padding: 0 20px 20px 20px;
+}
+
+.client-home-wrapper .faq-answer p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Responsive pour les stats et infos */
+@media (max-width: 480px) {
+    .client-home-wrapper .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .client-home-wrapper .about-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === BADGE DE NOTIFICATION === */
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    animation: badgePulseNotif 2s infinite;
+    border: 2px solid white;
+}
+
+@keyframes badgePulseNotif {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    }
+}
+
+/* === BOUTON VOIR PROFIL === */
+.client-home-wrapper .btn-view-profile {
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #a8d4b1 0%, #748e79 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 12px rgba(108, 154, 117, 0.3);
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.client-home-wrapper .btn-view-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(108, 154, 117, 0.4);
+    background: linear-gradient(135deg, #78a583 0%, #6c9a75 100%);
+}
+
+.client-home-wrapper .btn-view-profile:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(108, 154, 117, 0.3);
+}
+
+.client-home-wrapper .btn-view-profile i {
+    font-size: 0.9rem;
+}
+
+
+/* --- USER LOCATION MARKER --- */
+.user-geo-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.user-geo-dot {
+  width: 25px;
+  height: 25px;
+  background-color: #2563eb; /* Blue-600 intense */
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.user-geo-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(37, 99, 235, 0.4);
+  animation: pulse-ring 2s infinite;
+  z-index: 1;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+  }
+}

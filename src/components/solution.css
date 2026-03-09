@@ -1,0 +1,110 @@
+/* src/components/SolutionsSection.css */
+
+.solutions-section {
+    padding: 60px 20px;
+    background-color: rgb(255, 255, 250);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- 1. L'EN-TÊTE (Prend toute la largeur) --- */
+.section-header {
+    margin-bottom: 40px;
+    text-align: left; /* Aligné à gauche, comme le reste */
+    width: 100%;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin: 0 0 15px 0;
+    white-space: nowrap; /* Force une seule ligne */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.section-header h2 .highlight {
+    color: #80c79a;
+}
+
+.section-header p.intro {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 800px; /* Limite la largeur du paragraphe pour la lisibilité */
+    margin: 0;
+}
+
+/* --- 2. LES COLONNES (Cote à côte) --- */
+.solutions-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* GAUCHE : Cartes */
+.left-column {
+    flex: 1; /* 50% */
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
+    background-color: rgb(255, 255, 250);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-left: 4px solid #88c6a1;
+    transition: transform 0.2s;
+}
+.feature-card:hover { transform: translateY(-3px); }
+
+.feature-icon i { font-size: 1.8rem; color: #87ca9f; margin-bottom: 10px; }
+.feature-card h4 { margin: 0 0 5px 0; color: #1e293b; font-size: 1rem; font-weight: bold; }
+.feature-card p { margin: 0; font-size: 0.85rem; color: #64748b; }
+
+/* DROITE : Vidéo */
+.right-column {
+    flex: 1; /* 50% */
+    height: 400px; /* On aligne la hauteur avec la grille */
+}
+
+/* src/components/SolutionsSection.css */
+
+.video-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: -65px;
+    
+    /* Ajoute ça pour nettoyer les bords sur certains navigateurs (Chrome/Safari) */
+    transform: translateZ(0); 
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    background-color: transparent; /* Sécurité */
+}
+
+.solution-video {
+    width: 100.5%;
+    height: 100.5%;
+    position: relative;
+    left: -1px;
+    top: -1px;
+    object-fit: cover;
+    display: block;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 968px) {
+    .section-header h2 { white-space: normal; } /* Sur mobile, retour à la ligne autorisé */
+    .solutions-content { flex-direction: column; }
+    .right-column { width: 100%; height: 300px; }
+    .video-wrapper { margin-top: 0; }
+}
