@@ -398,7 +398,7 @@ function DashboardManager() {
               formDataObj.append('image', selectedFile);
           }
 
-          const res = await axios.put('${import.meta.env.VITE_API_URL}/api/manager/update', formDataObj, {
+          const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/manager/update`, formDataObj, {
               headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
           });
 
@@ -435,7 +435,7 @@ function DashboardManager() {
     };
 
     try {
-      await axios.post('${import.meta.env.VITE_API_URL}/api/admin/parking', payload, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/parking`, payload, {
           headers: { 'Authorization': `Bearer ${token}` }
       });
       alert("✅ Parking ajouté !");
