@@ -166,8 +166,11 @@ const [imagePreview, setImagePreview] = useState(null);
 
             // Traitement de la réponse...
             if (res.data) {
-                console.log("Réservation active trouvée");
-                // Mettre à jour l'état...
+                console.log("Réservation active trouvée :", res.data);
+                setCurrentReservation(res.data);
+                if (res.data.id_place) {
+                    setOccupiedSpots(prev => prev.includes(res.data.id_place) ? prev : [...prev, res.data.id_place]);
+                }
             }
 
         } catch (error) {
