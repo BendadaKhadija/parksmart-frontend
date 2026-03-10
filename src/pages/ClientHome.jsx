@@ -373,14 +373,14 @@ const checkActiveReservation = () => {
 
 // --- POLL RESERVATION TO KEEP TIMER SYNCED ---
 useEffect(() => {
+    if (!currentReservation) return;
     const interval = setInterval(() => {
-        // Uniquement si on a un token
         if (sessionStorage.getItem('token')) {
             checkActiveReservation();
         }
-    }, 5000); // Check toutes les 5 secondes
+    }, 15000);
     return () => clearInterval(interval);
-}, []);
+}, [currentReservation]);
 
  const handleStartReservation = async () => {
       if (!chosenSpot) return;
@@ -407,7 +407,8 @@ useEffect(() => {
 
       } catch (error) {
           console.error("Erreur API Réservation :", error.response || error);
-          alert("❌ Erreur lors de la réservation. Vérifie la console (F12).");
+          const msg = error.response?.data?.message || "Erreur réseau ou serveur.";
+          alert(`❌ ${msg}`);
       }
   };
 
