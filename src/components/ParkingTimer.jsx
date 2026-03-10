@@ -6,7 +6,27 @@ import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from '
 // Si tu n'utilises pas router, tu peux commenter cette ligne, sinon garde-la :
 // import { useNavigate } from 'react-router-dom'; 
 
-const ParkingTimer = ({ reservation, onStop }) => {
+function ProcessingStep({ onDone, styles }) {
+    useEffect(() => {
+        const timer = setTimeout(onDone, 2500);
+        return () => clearTimeout(timer);
+    }, [onDone]);
+    return (
+        <div style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }}>
+            <div className="spinner" style={{ width: '50px', height: '50px', border: '5px solid #eee', borderTop: '5px solid #6c9a75', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            <h3 style={{ marginTop: '20px', color: '#333' }}>Connexion à la banque...</h3>
+            <p style={{ color: '#666', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
+                Veuillez ne pas fermer cette fenêtre pendant le traitement sécurisé.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '30px', color: '#888', fontSize: '12px' }}>
+                <FaLock /> 3D Secure Verification
+            </div>
+        </div>
+    );
+}
+
+const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
     console.log("Données de la réservation reçues :", reservation);
     // Si tu n'as pas de router configuré, on utilise window.location.reload() à la fin
     // const navigate = useNavigate(); 
@@ -147,6 +167,7 @@ const ParkingTimer = ({ reservation, onStop }) => {
                 montant: response.data.montant, 
                 duree: response.data.duree || time.str 
             });
+            if (onPaymentStart) onPaymentStart();
             setStep('payment');
 
         } catch (error) {
@@ -184,12 +205,10 @@ const ParkingTimer = ({ reservation, onStop }) => {
             });
 
             alert("✅ Paiement validé ! Merci et à bientôt.");
-            window.location.href = "./ClientHome"; // Redirection vers la page d'accueil client après paiement réussi
-            // Si la prop onStop est passée depuis le parent, on l'utilise pour nettoyer l'état
             if (onStop) {
                 onStop(); 
             } else {
-                window.location.reload(); // Sinon on recharge la page brute
+                window.location.reload();
             }
 
         } catch (error) {
@@ -356,27 +375,8 @@ if (!reservation) {
     }
 
     if (step === 'processing') {
-        // Simulation d'un vrai paiement 3D Secure
-        setTimeout(() => setStep('summary'), 2500);
         return (
-            <div style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }}>
-                <div className="spinner" style={{ width: '50px', height: '50px', border: '5px solid #eee', borderTop: '5px solid #6c9a75', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-                <style>
-                    {`
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                    `}
-                </style>
-                <h3 style={{ marginTop: '20px', color: '#333' }}>Connexion à la banque...</h3>
-                <p style={{ color: '#666', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
-                    Veuillez ne pas fermer cette fenêtre pendant le traitement sécurisé.
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '30px', color: '#888', fontSize: '12px' }}>
-                    <FaLock /> 3D Secure Verification
-                </div>
-            </div>
+            <ProcessingStep onDone={() => setStep('summary')} styles={styles} />
         );
     }
 

@@ -57,6 +57,7 @@ const [imagePreview, setImagePreview] = useState(null);
   // occupiedSpots = places prises par les autres
   // On initialise avec un tableau vide : aucune place n'est prise au début.
   const [chosenSpot, setChosenSpot] = useState(null);
+  const isPayingRef = useRef(false);
 
   // --- MAP ROTATION ---
   const [mapRotation, setMapRotation] = useState(0);
@@ -363,8 +364,9 @@ const checkActiveReservation = () => {
         })
         .catch(err => {
             if (err.response && err.response.status === 404) {
-                // console.log("Aucune réservation active (Normal).");
-                setCurrentReservation(null);
+                if (!isPayingRef.current) {
+                    setCurrentReservation(null);
+                }
             } else {
                 console.error("Erreur lors de la vérification :", err);
             }
@@ -1116,12 +1118,12 @@ const renderProfileContent = () => {
        <div style={{ height: '100%', width: '100%', background: '#fff', zIndex: 999 }}>
           <ParkingTimer 
               reservation={currentReservation} 
+              onPaymentStart={() => { isPayingRef.current = true; }}
               onStop={() => {
-                  // Ce code s'exécute quand le paiement est fini dans le Timer
+                  isPayingRef.current = false;
                   setCurrentReservation(null);
                   setChosenSpot(null);
                   setOccupiedSpots(prev => prev.filter(id => id !== currentReservation.id_place));
-                  // On recharge la page pour être sûr que les places sont à jour
                   window.location.reload(); 
               }} 
           />
