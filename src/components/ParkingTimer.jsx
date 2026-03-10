@@ -8,7 +8,7 @@ import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from '
 
 function ProcessingStep({ onDone, styles }) {
     useEffect(() => {
-        const timer = setTimeout(onDone, 2500);
+        const timer = setTimeout(onDone, 1200);
         return () => clearTimeout(timer);
     }, [onDone]);
     return (
@@ -93,10 +93,10 @@ const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
              const diffInSeconds = Math.floor((currentNow - startMs) / 1000);
              
              setElapsedSeconds(prev => {
-                 // 🔔 NOTIFICATION LOCALE À EXACTEMENT 1 MINUTE (60s)
-                 if (prev < 60 && diffInSeconds >= 60) {
+                 // 🔔 NOTIFICATION LOCALE À 15 MINUTES (900s)
+                 if (prev < 900 && diffInSeconds >= 900) {
                      const msgTitle = "Rappel ParkSmart";
-                     const msgBody = "Une minute s'est écoulée depuis le début de votre réservation.";
+                     const msgBody = "15 minutes se sont écoulées depuis le début de votre réservation.";
                      const notifOptions = { body: msgBody, icon: '/logo192.png', vibrate: [200, 100, 200] };
 
                      if (Notification.permission === 'granted') {
