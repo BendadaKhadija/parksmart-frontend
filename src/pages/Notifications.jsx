@@ -15,8 +15,14 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
       let startMs = 0;
       
       // 🎯 STRATEGIE PRISE EN COMPTE DU DECALAGE HORAIRE
-      // A. Avoir un startMs approximatif via date_debut
-      if (activeReservation.date_debut) {
+      // A. Avoir un startMs approximatif via date_arrivee (format ISO du back)
+      if (activeReservation.date_arrivee) {
+         let dateStr = activeReservation.date_arrivee;
+         if (typeof dateStr === 'string') dateStr = dateStr.replace(' ', 'T');
+         startMs = new Date(dateStr).getTime();
+      }
+      // Fallback ancien champ date_debut
+      else if (activeReservation.date_debut) {
         let dateStr = activeReservation.date_debut;
         if (typeof dateStr === 'string') dateStr = dateStr.replace(' ', 'T');
         startMs = new Date(dateStr).getTime();
