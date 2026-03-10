@@ -45,6 +45,15 @@ function RequireClient({ children }) {
   }
   return children;
 }
+
+// 3. Route intelligente pour /home : si connecté → espace client, sinon → page d'accueil publique
+function SmartHome() {
+  const userString = sessionStorage.getItem('user');
+  if (!userString) return <HomePage />;
+  const user = JSON.parse(userString);
+  if (user.role === 'gestionnaire') return <Navigate to="/admin/dashboard" replace />;
+  return <ClientHome />;
+}
 // ==========================================
 // 🏠 PAGE D'ACCUEIL
 // ==========================================
@@ -67,8 +76,11 @@ function HomePage() {
 function AppContent() {
   const location = useLocation();
   
-  // Écoute des notifications Firebase en premier plan
+  // Écoute des notifications Firebase en premier plan (uniquement si connecté)
   useEffect(() => {
+    const userString = sessionStorage.getItem('user');
+    if (!userString) return; // Pas de notifications si pas connecté
+
     const unsubscribe = onMessageListener((payload) => {
       console.log("Message reçu en premier plan :", payload);
       const title = payload?.notification?.title || payload?.data?.title || "Nouvelle notification";
@@ -89,10 +101,11 @@ function AppContent() {
     };
   }, []);
 
-  // On cache la navbar sur les routes d'dashboard uniquement (et notifications si besoin)
-  // CLIENT VEUT LE HEADER SUR LOGIN/SIGNUP
-  const hideNavbarRoutes = ['/admin/dashboard', '/notifications', '/client-home', '/home'];
-  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
+  // On cache la navbar uniquement si l'utilisateur est connecté sur /home (sinon on la montre)
+  const isLoggedIn = !!sessionStorage.getItem('user');
+  const hideNavbarRoutes = ['/admin/dashboard', '/notifications', '/client-home'];
+  const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname) && 
+    !(location.pathname === '/home' && isLoggedIn);
 
   return (
     <>
@@ -142,14 +155,10 @@ function AppContent() {
             </RequireClient>
           } 
         />
-        {/* Sécurité si le login renvoie vers /home */}
+        {/* /home : accessible par tous, montre le dashboard client si connecté, sinon la page d'accueil */}
         <Route 
           path="/home" 
-          element={
-            <RequireClient>
-              <ClientHome />
-            </RequireClient>
-          } 
+          element={<SmartHome />} 
         />
         
       </Routes>
