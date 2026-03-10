@@ -124,34 +124,7 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
         // Tri par date décroissante
         let sortedNotifs = notificationsFiltrees.sort((a, b) => new Date(b.date_notif || b.date_creation) - new Date(a.date_notif || a.date_creation));
 
-        // 🔥 MAGIC TOUCH POUR LE JURY : Injecter des notifications réalistes si la BDD est vide
-        if (true) {
-            const now = Date.now();
-            sortedNotifs = [
-                {
-                    id_notif: 'demo_1',
-                    titre: 'Paiement Validé',
-                    message: `Votre paiement de sécurité de 4.00 DH via Carte Bancaire a bien été traité. Reçu #PK-${Math.floor(Math.random()*10000)}.`,
-                    date_notif: new Date(now - 1000 * 60 * 45).toISOString(),
-                    lu: 0
-                },
-                {
-                    id_notif: 'demo_2',
-                    titre: 'Alerte Sécurité',
-                    message: `Nouvelle connexion détectée sur votre compte (iPhone 14, Casablanca). Si ce n'est pas vous, modifiez votre mot de passe.`,
-                    date_notif: new Date(now - 1000 * 60 * 60 * 3).toISOString(),
-                    lu: 0
-                },
-                {
-                    id_notif: 'demo_3',
-                    titre: 'Bienvenue sur ParkSmart',
-                    message: `Bonjour ${user.prenom || 'Conducteur'} ! Votre profil a été vérifié avec succès. Prêt(e) à trouver votre place idéale ?`,
-                    date_notif: new Date(now - 1000 * 60 * 60 * 48).toISOString(),
-                    lu: 1
-                },
-                ...sortedNotifs // On garde aussi celles de la DB s'il y en a
-            ];
-        }
+        // Notifications réelles uniquement (provenant de la BDD)
 
         setNotifications(sortedNotifs);
       } catch (error) {

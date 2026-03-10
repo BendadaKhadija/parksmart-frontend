@@ -15,7 +15,7 @@ import Notification from './Notifications.jsx';
 // --- CONFIG ICONS DELETED TO USE DYNAMIC ONES INSIDE COMPONENT ---
 
 
-function RecenterMap({ position }) { const map = useMap(); useEffect(() => { if (position) map.flyTo(position, 15, { animate: true, duration: 2 }); }, [position, map]); return null; }
+function RecenterMap({ position }) { const map = useMap(); const hasCentered = useRef(false); useEffect(() => { if (position && !hasCentered.current) { map.flyTo(position, 15, { animate: true, duration: 2 }); hasCentered.current = true; } }, [position, map]); return null; }
 function MapClickHandler({ onMapClick }) { useMapEvents({ click: () => onMapClick() }); return null; }
 
 // --- HELPER: Compute rotation from touches ---
@@ -195,11 +195,9 @@ const [imagePreview, setImagePreview] = useState(null);
           headers: { Authorization: `Bearer ${token}` }
         });
         const unread = (res.data || []).filter(n => n.lu === 0).length;
-        // Ajouter les 2 notifications démo non lues
-        setUnreadNotifications(unread + 2);
+        setUnreadNotifications(unread);
       } catch (e) {
-        // Si pas de notifs en BDD, on met les 2 démo
-        setUnreadNotifications(2);
+        setUnreadNotifications(0);
       }
     };
     fetchUnreadCount();
