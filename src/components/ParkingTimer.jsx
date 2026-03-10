@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from '
 // import { useNavigate } from 'react-router-dom'; 
 
 function ProcessingStep({ onDone, styles }) {
-    const onDoneRef = React.useRef(onDone);
+    const onDoneRef = useRef(onDone);
     useEffect(() => {
         const timer = setTimeout(() => onDoneRef.current(), 1200);
         return () => clearTimeout(timer);
@@ -51,8 +51,18 @@ const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
         let startMs = 0;
         const now = Date.now();
 
-        // A. Essayer de parser date_debut
-        if (reservation.date_debut) {
+        // A. Essayer de parser date_arrivee (format ISO standard du back)
+        if (reservation.date_arrivee) {
+             const dateStr = typeof reservation.date_arrivee === 'string' 
+                 ? reservation.date_arrivee
+                 : reservation.date_arrivee;
+             const parsed = new Date(dateStr).getTime();
+             if (!isNaN(parsed) && parsed > 0) {
+                  startMs = parsed;
+             }
+        }
+        // Fallback ancient champ date_debut
+        else if (reservation.date_debut) {
             const dateStr = typeof reservation.date_debut === 'string' 
                 ? reservation.date_debut.replace(' ', 'T') 
                 : reservation.date_debut;
