@@ -7,10 +7,11 @@ import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from '
 // import { useNavigate } from 'react-router-dom'; 
 
 function ProcessingStep({ onDone, styles }) {
+    const onDoneRef = React.useRef(onDone);
     useEffect(() => {
-        const timer = setTimeout(onDone, 1200);
+        const timer = setTimeout(() => onDoneRef.current(), 1200);
         return () => clearTimeout(timer);
-    }, [onDone]);
+    }, []);
     return (
         <div style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }}>
             <div className="spinner" style={{ width: '50px', height: '50px', border: '5px solid #eee', borderTop: '5px solid #6c9a75', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
