@@ -3,10 +3,11 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios';
 import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from 'react-icons/fa';
+import { useTranslation } from '../i18n.jsx';
 // Si tu n'utilises pas router, tu peux commenter cette ligne, sinon garde-la :
 // import { useNavigate } from 'react-router-dom'; 
 
-function ProcessingStep({ onDone, styles }) {
+function ProcessingStep({ onDone, styles, t }) {
     const onDoneRef = useRef(onDone);
     useEffect(() => {
         const timer = setTimeout(() => onDoneRef.current(), 1200);
@@ -21,13 +22,14 @@ function ProcessingStep({ onDone, styles }) {
                 Veuillez ne pas fermer cette fenêtre pendant le traitement sécurisé.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '30px', color: '#888', fontSize: '12px' }}>
-                <FaLock /> 3D Secure Verification
+                <FaLock /> {t('timer_3d_secure')}
             </div>
         </div>
     );
 }
 
 const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
+    const { t } = useTranslation();
     console.log("Données de la réservation reçues :", reservation);
     // Si tu n'as pas de router configuré, on utilise window.location.reload() à la fin
     // const navigate = useNavigate(); 
@@ -257,7 +259,7 @@ if (!reservation) {
     if (step === 'timer') {
         return (
             <div style={styles.container}>
-                <div style={styles.header}><h2 style={{...styles.title, margin:'auto'}}>Parking Timer</h2></div>
+                <div style={styles.header}><h2 style={{...styles.title, margin:'auto'}}>{t('timer_title')}</h2></div>
                 <div style={styles.timerWrapper}>
                     <div style={{ width: 220, height: 220 }}>
                         <CircularProgressbar 
@@ -275,7 +277,7 @@ if (!reservation) {
                     <div style={styles.priceRow}><span>3 Heures</span> <span>12.00 DH</span></div>
                 </div>
                 <button style={styles.mainButton} onClick={handleStop} disabled={isLoading}>
-                    {isLoading ? "CALCUL..." : "PAY NOW"}
+                    {isLoading ? "CALCUL..." : t('timer_pay_now')}
                 </button>
             </div>
         );
@@ -287,9 +289,9 @@ if (!reservation) {
             <div style={styles.container}>
                 <div style={styles.header}>
                     <FaArrowLeft onClick={() => setStep('timer')} style={{cursor:'pointer'}} />
-                    <h2 style={styles.title}>Payment Methods</h2>
+                    <h2 style={styles.title}>{t('timer_methods_title')}</h2>
                 </div>
-                <h4 style={{marginBottom:'20px'}}>Choose Payment Methods</h4>
+                <h4 style={{marginBottom:'20px'}}>{t('timer_choose_method')}</h4>
 
                 {[
                     {id:'credit_card', icon: <FaCreditCard color="#333" size={24}/>, label: "Carte Bancaire (Sécurisé)"},
@@ -309,7 +311,7 @@ if (!reservation) {
                     } else {
                         setStep('processing');
                     }
-                }}>CONTINUE</button>
+}}>{t('timer_continue')}</button>
             </div>
         );
     }
@@ -387,7 +389,7 @@ if (!reservation) {
 
     if (step === 'processing') {
         return (
-            <ProcessingStep onDone={() => setStep('summary')} styles={styles} />
+            <ProcessingStep onDone={() => setStep('summary')} styles={styles} t={t} />
         );
     }
 
@@ -401,39 +403,39 @@ if (!reservation) {
             <div style={styles.container}>
                  <div style={styles.header}>
                     <FaArrowLeft onClick={() => setStep('payment')} style={{cursor:'pointer'}} />
-                    <h2 style={styles.title}>Payment Detail</h2>
+                    <h2 style={styles.title}>{t('timer_payment_detail')}</h2>
                 </div>
                 
                 <div style={{textAlign:'center', margin:'20px 0'}}>
                    <div style={{width:80, height:80, backgroundColor:'#6c9a75', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto'}}>
                         <span style={{color:'white', fontSize:'40px'}}>✓</span>
                    </div>
-                   <h3 style={{marginTop:'15px'}}>Payment Review</h3>
+                   <h3 style={{marginTop:'15px'}}>{t('timer_payment_review')}</h3>
                 </div>
 
                 <div style={{border:'1px solid #ddd', borderRadius:'12px', padding:'20px'}}>
-                    <h4 style={{marginTop:0}}>Order Detail</h4>
+                    <h4 style={{marginTop:0}}>{t('timer_order_detail')}</h4>
                     <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>Parking Area</span>
+                        <span style={{color:'#777'}}>{t('timer_parking_area')}</span>
                         <strong>{reservation.nom_parking || "Parking Smart"}</strong>
                     </div>
                      <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>Duration</span>
+                        <span style={{color:'#777'}}>{t('timer_duration')}</span>
                         <strong>{billData.duree}</strong>
                     </div>
                      <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>Date</span>
+                        <span style={{color:'#777'}}>{t('timer_date')}</span>
                         <strong>{new Date().toLocaleDateString()}</strong>
                     </div>
                     <hr style={{borderTop:'1px dashed #ccc', margin:'15px 0'}}/>
                     <div style={{display:'flex', justifyContent:'space-between', fontSize:'18px', fontWeight:'bold'}}>
-                        <span>Total</span>
+                        <span>{t('timer_total')}</span>
                         <span style={{color:'#6c9a75'}}>{total} DH</span>
                     </div>
                 </div>
 
                 <button style={styles.mainButton} onClick={handleFinalize} disabled={isLoading}>
-                    {isLoading ? "PROCESSING..." : "CONFIRM PAYMENT"}
+                    {isLoading ? t('timer_processing') : t('timer_confirm')}
                 </button>
             </div>
             

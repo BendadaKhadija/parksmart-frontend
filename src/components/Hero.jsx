@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../i18n.jsx';
 
 // Tes images pour le carrousel PC
-const carouselImages = [ // Renommé pour plus de clarté
+const carouselImages = [
   '/slide1.png',
   '/slide2.png',
   '/slide3.png',
@@ -12,13 +13,12 @@ const carouselImages = [ // Renommé pour plus de clarté
 
 function Hero() {
   const [currentImage, setCurrentImage] = useState(0);
+  const { t } = useTranslation();
 
-  // L'animation du carrousel
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % carouselImages.length);
     }, 2500);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -26,25 +26,17 @@ function Hero() {
     <section className="hero-section">
       <div className="hero-container">
         
-        {/* PARTIE GAUCHE : TEXTE */}
         <div className="hero-left">
           <h1>
-            Transforming parking <br /> 
-            with Park<span className="highlight">Smart</span>
+            {t('hero_title1')} <br /> 
+            {t('hero_title2')}<span className="highlight">{t('hero_title3')}</span>
           </h1>
-          <p>
-            ParkSmart is a real-time system for finding and reserving parking spots.
-            It offers an easy interface with live availability and a quick booking process.
-            Managers can track and optimize parking spaces efficiently.
-          </p>
-          <Link to="/signin" className="btn-hero">Get in Touch</Link>
+          <p>{t('hero_desc')}</p>
+          <Link to="/signin" className="btn-hero">{t('hero_cta')}</Link>
         </div>
 
-        {/* PARTIE DROITE : AFFICHAGE CONDITIONNEL DES IMAGES */}
         <div className="hero-right">
-          
-          {/* 1. CARROUSEL (Visible sur PC, caché sur mobile) */}
-          <div className="carousel-container desktop-carousel"> {/* Ajout de la classe "desktop-carousel" */}
+          <div className="carousel-container desktop-carousel">
             {carouselImages.map((img, index) => (
               <img
                 key={index}
@@ -54,16 +46,12 @@ function Hero() {
               />
             ))}
           </div>
-
-          {/* 2. IMAGE MOCKUP (Visible sur mobile, caché sur PC) */}
           <img 
             src="/hero1.png" 
-            alt="ParkSmart Responsive Design" 
-            className="responsive-mockup-image mobile-only-image" // Nouvelles classes
+            alt="ParkSmart" 
+            className="responsive-mockup-image mobile-only-image"
           />
-
         </div>
-
       </div>
     </section>
   );

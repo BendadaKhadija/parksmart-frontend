@@ -1,34 +1,12 @@
 import { useState } from 'react';
-
-const faqs = [
-  {
-    question: "What is ParkSmart?",
-    answer: "ParkSmart is an advanced parking management system that combines hardware and software to provide a seamless and efficient parking experience for users and managers alike."
-  },
-  {
-    question: "How do I find a parking spot?",
-    answer: "Our mobile app allows you to view real-time parking availability on a map. You can filter by location, price, and amenities, then book your preferred spot instantly."
-  },
-  {
-    question: "Is payment processed securely?",
-    answer: "Yes, all payments are processed through secure, encrypted channels. We partner with leading payment providers to ensure your financial data is protected."
-  },
-  {
-    question: "Can I manage my own parking facility with ParkSmart?",
-    answer: "Absolutely! ParkSmart provides a dedicated platform for parking facility managers to list their spots, track usage, and streamline operations."
-  },
-  {
-    question: "What if I need help while parking?",
-    answer: "Our support team is available 24/7 through the app or our website. We're here to assist you with any issues or questions you may have."
-  }
-];
+import { useTranslation } from '../i18n.jsx';
 
 function FaqItem({ item, index, isOpen, onToggle }) {
   return (
     <div className={isOpen ? 'faq-item open' : 'faq-item'}>
       <div className="faq-question" onClick={onToggle}>
         <span>{item.question}</span>
-        <div className="faq-icon">&#x25BC;</div> {/* Flèche vers le bas */}
+        <div className="faq-icon">&#x25BC;</div>
       </div>
       <div className="faq-answer">
         <p>{item.answer}</p>
@@ -39,6 +17,15 @@ function FaqItem({ item, index, isOpen, onToggle }) {
 
 function Questions() {
   const [openQuestion, setOpenQuestion] = useState(null);
+  const { t } = useTranslation();
+
+  const faqs = [
+    { question: t('faq_q1'), answer: t('faq_a1') },
+    { question: t('faq_q2'), answer: t('faq_a2') },
+    { question: t('faq_q3'), answer: t('faq_a3') },
+    { question: t('faq_q4'), answer: t('faq_a4') },
+    { question: t('faq_q5'), answer: t('faq_a5') },
+  ];
 
   const handleToggle = (index) => {
     setOpenQuestion(openQuestion === index ? null : index);
@@ -47,24 +34,19 @@ function Questions() {
   return (
     <section className="faq-section">
       <div className="container">
-        {/* Partie Gauche : Titre et bloc de contact */}
         <div className="faq-content-left">
-          <p className="sub-heading">Ready to Park Smart</p> {/* Texte au-dessus */}
-          <h2>Frequently Asked <br />Questions</h2> {/* Titre principal */}
+          <p className="sub-heading">{t('faq_title')}</p>
+          <h2>{t('faq_subtitle')}</h2>
 
           <div className="faq-contact-box">
-            <h3>Still have a question?</h3>
-            <p>
-              Can't find the answer to your question? Send us an email and
-              we'll get back to you as soon as possible!
-            </p>
+            <h3>{t('faq_still_question')}</h3>
+            <p>{t('faq_still_desc')}</p>
             <a href="mailto:contact@parksmart.com" className="btn-send-email">
-              Send Email
+              {t('faq_send_email')}
             </a>
           </div>
         </div>
 
-        {/* Partie Droite : Accordéon des questions */}
         <div className="faq-accordion-right">
           {faqs.map((item, index) => (
             <FaqItem

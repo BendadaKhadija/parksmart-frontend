@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/ClientHistory.css'; // On lie le fichier CSS
+import '../styles/ClientHistory.css';
+import { useTranslation } from '../i18n.jsx';
 
 const ClientHistory = ({ onDetailViewChange }) => {
+    const { t } = useTranslation();
     // États
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -118,7 +120,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
         if (!end) return "En cours";
         const diff = new Date(end) - new Date(start);
         const hours = Math.floor(diff / (1000 * 60 * 60));
-        return `${hours} Hours`;
+        return `${hours} ${t('history_hours')}`;
     };
 
     const displayRating = (note) => {
@@ -144,7 +146,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
     // --- 3. VUE : LISTE HISTORIQUE ---
     return (
         <div className="history-container">
-            <h2 className="page-title">My Parking History</h2>
+            <h2 className="page-title">{t('history_title')}</h2>
             
             {loading ? <p>Chargement...</p> : (
                 <div className="history-list">
@@ -209,7 +211,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
                                 <h3>{item.nom}</h3>
                                 <p className="address">{item.adresse}</p>
                                 <div className="card-price-row">
-                                    <span className="price">${item.tarif_heure}/Hour</span>
+                                    <span className="price">{item.tarif_heure} DH{t('history_hour')}</span>
                                     {/* Note Dynamique dans la liste */}
                                     <span className="rating">
                                         {/* Affiche note calculée si dispo, sinon 0 */}
@@ -227,7 +229,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
                                     className="btn-detail"
                                     onClick={() => setSelectedBooking(item)}
                                 >
-                                    Detail
+                                    {t('history_detail')}
                                 </button>
                             </div>
                         </div>
@@ -248,6 +250,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
 
 // --- COMPOSANT DÉTAIL & MODAL ---
 const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCalculated }) => {
+    const { t } = useTranslation();
     const [view, setView] = useState('detail'); // 'detail', 'reviews'
     const [showWriteModal, setShowWriteModal] = useState(false);
     const [rating, setRating] = useState(0);
@@ -332,7 +335,7 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
             <div className={`detail-container ${showWriteModal ? 'blur-content' : ''}`}>
                 <div className="detail-header">
                     <button onClick={() => setView('detail')} className="back-arrow">←</button>
-                    <h3>Review</h3>
+                    <h3>{t('history_review')}</h3>
                     <div style={{width: 24}}></div>
                 </div>
 
@@ -342,7 +345,7 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
                         <div className="stars-row">
                             {[1,2,3,4,5].map(s => <span key={s} style={{color: s <= Math.round(stats.average) ? '#fbbf24' : '#e2e8f0'}}>★</span>)}
                         </div>
-                        <span className="review-count">Based On {stats.total} Review</span>
+                        <span className="review-count">{t('history_based_on').replace('{count}', stats.total)}</span>
                     </div>
 
                     <div className="rating-bars">
@@ -379,7 +382,7 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
 
                 <div className="bottom-fixed-action">
                     <button className="btn-success-full" onClick={() => setShowWriteModal(true)}>
-                        WRITE A REVIEW
+                        {t('history_write_review')}
                     </button>
                 </div>
 
@@ -389,7 +392,7 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
                         <div className="write-review-sheet" onClick={(e) => e.stopPropagation()}>
                             <div className="sheet-handle"></div>
                             
-                            <h2 className="title-center">Give A Review</h2>
+                            <h2 className="title-center">{t('history_give_review')}</h2>
                             
                             <div className="star-input-large">
                                 {[1,2,3,4,5].map(star => (
@@ -400,16 +403,16 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
                             </div>
 
                             <div className="form-box">
-                                <label>Detail Review</label>
+                                <label>{t('history_detail_review')}</label>
                                 <textarea 
-                                    placeholder="The Parking Is Very Good..."
+                                    placeholder={t('history_review_placeholder')}
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
                                 ></textarea>
                             </div>
 
                             <button className="btn-success-full no-radius" onClick={submitReview}>
-                                SUBMIT
+                                {t('history_submit')}
                             </button>
                         </div>
                     </div>
@@ -424,11 +427,11 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
             {/* Header */}
             <div className="detail-header">
                 <button onClick={onBack} className="back-arrow">←</button>
-                <h3>Detail</h3>
+                <h3>{t('history_detail')}</h3>
                 <div style={{width: 24}}></div>
             </div>
 
-            <h2 className="section-title">Parking Detail</h2>
+            <h2 className="section-title">{t('history_parking_detail')}</h2>
 
             {/* Carte Info */}
             <div className="detail-card">
@@ -474,17 +477,17 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
                 
                 <div className="detail-stats">
                     <div className="stat-row">
-                        <span>Time</span>
+                        <span>{t('history_time')}</span>
                         <b>{duration}</b>
                     </div>
                     <div className="stat-row">
-                        <span>Total</span>
-                        <b className="green-total">${booking.prix_total}</b>
+                        <span>{t('history_total')}</span>
+                        <b className="green-total">{booking.prix_total} DH</b>
                     </div>
                 </div>
             </div>
 
-            <h3 className="section-title">Payment Methods</h3>
+            <h3 className="section-title">{t('history_payment_methods')}</h3>
             <div className="payment-box">
                 <div className="google-logo">G</div>
                 <span>Google Pay</span>
@@ -493,8 +496,8 @@ const ParkingDetailView = ({ booking, duration, onBack, displayRating, ratingCal
             {/* Bouton Review qui mène à la page des avis */}
             <div className="bottom-action" style={{marginTop: 30}}>
                 <div className="review-link-card" onClick={() => setView('reviews')}>
-                    <span style={{fontWeight:'bold'}}>Review</span>
-                    <span style={{color:'#6F9C76', cursor:'pointer'}}>See All <i className="fa-solid fa-chevron-right"></i></span>
+                    <span style={{fontWeight:'bold'}}>{t('history_review')}</span>
+                    <span style={{color:'#6F9C76', cursor:'pointer'}}>{t('history_see_all')} <i className="fa-solid fa-chevron-right"></i></span>
                 </div>
             </div>
         </div>

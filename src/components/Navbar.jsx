@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useTranslation, LanguageSwitcher } from '../i18n.jsx';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         
         {/* 1. LOGO */}
-        {/* Dans Navbar.jsx */}
 <Link to="/" className="logo-container" style={{ display: 'flex', alignItems: 'center' }} onClick={() => setIsOpen(false)}>
     <img
       src="/LOGO.png"
@@ -26,34 +27,38 @@ function Navbar() {
         {/* 3. LES LIENS (Menu) */}
         <ul className={isOpen ? "nav-menu active" : "nav-menu"}>
           <li className="nav-item">
-            <NavLink to="/" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>Home</NavLink>
+            <NavLink to="/" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>{t('nav_home')}</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/testimonials" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>Testimonials</NavLink>
+            <NavLink to="/testimonials" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>{t('nav_testimonials')}</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/about" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>About Us</NavLink>
+            <NavLink to="/about" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>{t('nav_about')}</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/questions" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>Questions</NavLink>
+            <NavLink to="/questions" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>{t('nav_questions')}</NavLink>
           </li>
               <li className="nav-item">
-                <NavLink to="/solution" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>Solutions</NavLink>
+                <NavLink to="/solution" className={({ isActive }) => isActive ? "nav-links active" : "nav-links"} onClick={() => setIsOpen(false)}>{t('nav_solutions')}</NavLink>
               </li>
 
               {/* Boutons d'action dans le menu mobile */}
               <li className="nav-item mobile-btn">
-                <Link to="/signin" className="btn-signin" onClick={() => setIsOpen(false)}>Sign In</Link>
+                <Link to="/signin" className="btn-signin" onClick={() => setIsOpen(false)}>{t('nav_signin')}</Link>
               </li>
               <li className="nav-item mobile-btn">
-                <Link to="/signup" className="btn-signup" onClick={() => setIsOpen(false)}>Sign Up</Link>
+                <Link to="/signup" className="btn-signup" onClick={() => setIsOpen(false)}>{t('nav_signup')}</Link>
+              </li>
+              <li className="nav-item mobile-btn">
+                <LanguageSwitcher />
               </li>
             </ul>
 
         {/* 4. BOUTONS DESKTOP (Cachés sur mobile) */}
         <div className="desktop-btn">
-            <Link to="/signin" className="btn-signin">Sign In</Link>
-            <Link to="/signup" className="btn-signup">Sign Up</Link>
+            <LanguageSwitcher />
+            <Link to="/signin" className="btn-signin">{t('nav_signin')}</Link>
+            <Link to="/signup" className="btn-signup">{t('nav_signup')}</Link>
         </div>
 
       </div>

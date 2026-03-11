@@ -10,6 +10,7 @@ import '../styles/ClientHome.css';
 import { FaCamera } from 'react-icons/fa';
 import ClientHistory from './ClientHistory';
 import Notification from './Notifications.jsx';
+import { useTranslation } from '../i18n.jsx';
 
 
 // --- CONFIG ICONS DELETED TO USE DYNAMIC ONES INSIDE COMPONENT ---
@@ -26,6 +27,7 @@ const getAngle = (touches) => {
 };
 
 function ClientHome() {
+  const { t } = useTranslation();
   // --- NAVIGATION ---
   const [currentReservation, setCurrentReservation] = useState(null);
   const [activeTab, setActiveTab] = useState('home'); 
@@ -1274,7 +1276,7 @@ const renderProfileContent = () => {
                               {parkingRating.note}
                           </span>
                           <span className="rating-reviews">
-                              ({parkingRating.total} Review{parkingRating.total > 1 ? 's' : ''})
+                              ({parkingRating.total} {parkingRating.total > 1 ? t('home_reviews') : t('home_review')})
                           </span>
                       </div>
 
@@ -1300,7 +1302,7 @@ const renderProfileContent = () => {
                               <span className="info-text">
                                   {selectedParking.places_disponibles !== undefined 
                                       ? selectedParking.places_disponibles 
-                                      : ((selectedParking.nb_rangees || 1) * (selectedParking.nb_places_par_rangee || 10))} Place Available
+                                      : ((selectedParking.nb_rangees || 1) * (selectedParking.nb_places_par_rangee || 10))} {t('home_place_available')}
                               </span>
                           </div>
 
@@ -1316,7 +1318,7 @@ const renderProfileContent = () => {
 
                         {/* --- LIGNE DES BOUTONS (Continue + ItinÃ©raire) --- */}
                         <div style={{ display: 'flex', gap: '15px', width: '100%', alignItems: 'center' }}>
-                            <button className="btn-continue" onClick={() => setShowGrid(true)}>Continue</button>
+                            <button className="btn-continue" onClick={() => setShowGrid(true)}>{t('home_continue')}</button>
 
                             <button 
                                 className="btn-navigate" 

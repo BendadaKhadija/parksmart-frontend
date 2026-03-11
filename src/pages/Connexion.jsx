@@ -2,10 +2,11 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/index.css'; 
+import { useTranslation } from '../i18n.jsx';
 
 // 👇 1. NOUVEAUX IMPORTS FIREBASE 👇
 import { signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase'; // Assure-toi que firebase.js est dans le même dossier
+import { auth, googleProvider } from '../firebase';
 
 function Connexion() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ function Connexion() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // --- CONNEXION CLASSIQUE ---
   const handleLogin = async (e) => {
@@ -108,8 +110,8 @@ function Connexion() {
         <div className="auth-image-side"></div>
 
         <div className="auth-form-side">
-          <h2>Welcome Back</h2>
-          <p>Please enter your details to sign in.</p>
+          <h2>{t('login_welcome')}</h2>
+          <p>{t('login_subtitle')}</p>
           
           <div className="profile-avatar-display">
             <img 
@@ -121,7 +123,7 @@ function Connexion() {
           <form onSubmit={handleLogin} className="auth-form">
             <input 
               type="email" 
-              placeholder="Email" 
+              placeholder={t('login_email_placeholder')} 
               className="auth-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)} 
@@ -131,7 +133,7 @@ function Connexion() {
             <div className="password-input-container">
               <input 
                 type={showPassword ? "text" : "password"} 
-                placeholder="Password" 
+                placeholder={t('login_password_placeholder')} 
                 className="auth-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} 
@@ -144,21 +146,21 @@ function Connexion() {
               ></i>
             </div>
             
-            <button type="submit" className="btn-primary-auth">Sign In</button>
+            <button type="submit" className="btn-primary-auth">{t('login_submit')}</button>
           </form>
           
           {error && <div style={{ color: '#dc2626', marginTop: '15px', textAlign: 'center', fontWeight: 'bold' }}>{error}</div>}
 
-          <div className="divider"><span>OR</span></div>
+          <div className="divider"><span>{t('login_or')}</span></div>
 
           {/* 👇 3. TON BOUTON MIS À JOUR 👇 */}
           <button type="button" className="btn-google" onClick={handleGoogleLogin}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="google-icon" />
-            Sign in with Google
+            {t('login_google')}
           </button>
           
           <div className="auth-footer">
-            New to ParkSmart? <Link to="/signup" className="auth-link">Create account</Link>
+            {t('login_new')} <Link to="/signup" className="auth-link">{t('login_create')}</Link>
           </div>
         </div>
 

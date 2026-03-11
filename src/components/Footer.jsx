@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from '../i18n.jsx';
 
 function Footer() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const { t } = useTranslation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,10 +18,8 @@ function Footer() {
     <footer className="footer-section">
       <div className="footer-container">
         
-        {/* Colonne 1 : Logo & Réseaux Sociaux */}
         <div className="footer-column footer-about">
           <Link to="/" className="footer-logo-link">
-             {/* Assure-toi que LOGO.png est bien dans le dossier public */}
              <img src="/LOGO.png" alt="ParkSmart" className="footer-logo-img" /> 
           </Link>
           <p>
@@ -34,48 +34,43 @@ function Footer() {
           </div>
         </div>
 
-        {/* Colonne 2 : Liens Rapides */}
         <div className="footer-column footer-links">
-          <h3>Quick Links</h3>
+          <h3>{t('footer_quick_links')}</h3>
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/privacy">Privacy Policy</Link></li>
+            <li><Link to="/">{t('footer_home')}</Link></li>
+            <li><Link to="/about">{t('footer_about')}</Link></li>
+            <li><Link to="/contact">{t('footer_contact')}</Link></li>
+            <li><Link to="/privacy">{t('footer_privacy')}</Link></li>
           </ul>
         </div>
 
-        {/* Colonne 3 : Formulaire de Contact & Image (Celle qui va disparaître sur mobile) */}
         <div className="footer-column footer-contact-form">
-          <h3>Have a message? Get in touch!</h3>
+          <h3>{t('footer_message_title')}</h3>
           
           <form className="contact-form" onSubmit={handleSubmit}>
             <input 
               type="email" 
-              placeholder="Your email here..." 
+              placeholder={t('footer_email_placeholder')} 
               className="form-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <textarea 
-              placeholder="Your message here..." 
+              placeholder={t('footer_message_placeholder')} 
               className="form-textarea"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
             ></textarea>
-            <button type="submit" className="form-button">Send</button>
+            <button type="submit" className="form-button">{t('footer_send')}</button>
           </form>
-
-          
         </div>
 
       </div>
 
-      {/* Barre de Copyright */}
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} ParkSmart. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ParkSmart. {t('footer_rights')}</p>
       </div>
     </footer>
   );

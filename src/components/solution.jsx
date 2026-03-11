@@ -1,47 +1,46 @@
 import React from 'react';
 import './solutions.css';
+import { useTranslation } from '../i18n.jsx';
 
 function SolutionsSection() {
+  const { t } = useTranslation();
   return (
     <section className="solutions-section">
       <div className="main-container">
         
-        {/* --- 1. EN-TÊTE : Titre Large (Couvre tout) --- */}
         <div className="section-header">
-          <h2>ParkSmart Solutions: <span className="highlight"> Uniting Hardware & Software</span></h2>
+          <h2>{t('solutions_title')}<span className="highlight">{t('solutions_subtitle')}</span></h2>
           <p className="intro">
-            A unified phygital platform connecting drivers and managers for a seamless, frictionless parking experience.
+            {t('solutions_desc')}
           </p>
         </div>
-        {/* --- 2. CONTENU : Les Colonnes en dessous --- */}
         <div className="solutions-content">
           
-          {/* GAUCHE : Les Cartes */}
           <div className="left-column">
             <div className="features-grid">
               
               <div className="feature-card">
                 <div className="feature-icon"><i className="fa-solid fa-layer-group"></i></div>
-                <h4>Visual Selection</h4>
-                <p>Choose your exact spot (e.g., A-12) on an interactive map.</p>
+                <h4>{t('sol_visual')}</h4>
+                <p>{t('sol_visual_desc')}</p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon"><i className="fa-solid fa-cloud-arrow-up"></i></div>
-                <h4>Cloud Sync</h4>
-                <p>Real-time updates of spot availability across the database.</p>
+                <h4>{t('sol_cloud')}</h4>
+                <p>{t('sol_cloud_desc')}</p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon"><i className="fa-solid fa-mobile-screen-button"></i></div>
-                <h4>Mobile App</h4>
-                <p>GPS navigation, smart filtering, and secure QR ticketing.</p>
+                <h4>{t('sol_mobile')}</h4>
+                <p>{t('sol_mobile_desc')}</p>
               </div>
 
               <div className="feature-card">
                 <div className="feature-icon"><i className="fa-solid fa-chart-line"></i></div>
-                <h4>Manager Dashboard</h4>
-                <p>Admin tools to manage parking lots and track revenue.</p>
+                <h4>{t('sol_dashboard')}</h4>
+                <p>{t('sol_dashboard_desc')}</p>
               </div>
 
             </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/index.css';
+import { useTranslation } from '../i18n.jsx';
 
 function Inscription() {
   const [formData, setFormData] = useState({
@@ -9,17 +10,17 @@ function Inscription() {
     prenom: '',
     email: '',
     password: '',
-    role: 'conducteur', // ✅ 1. Valeur par défaut corrigée
+    role: 'conducteur', 
   });
   
   const [error, setError] = useState('');
   
-  // États pour l'image et l'œil
   const [previewImage, setPreviewImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false); 
   const [selectedFile, setSelectedFile] = useState(null);
   
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,8 +74,8 @@ function Inscription() {
 
         {/* FORMULAIRE DROITE */}
         <div className="auth-form-side">
-          <h2>Create Account</h2>
-          <p className="subtitle">Join ParkSmart in just a few steps.</p>
+          <h2>{t('signup_title')}</h2>
+          <p className="subtitle">{t('signup_subtitle')}</p>
 
           {/* CERCLE PHOTO (Visuel uniquement pour l'instant) */}
           <div className="profile-upload" onClick={() => document.getElementById('profilePictureInput').click()}>
@@ -100,7 +101,7 @@ function Inscription() {
                 <input 
                     type="text" 
                     name="prenom" 
-                    placeholder="Prénom (First Name)" 
+                    placeholder={t('signup_prenom_placeholder')} 
                     className="auth-input" 
                     onChange={handleChange} 
                     required 
@@ -111,7 +112,7 @@ function Inscription() {
                 <input 
                     type="text" 
                     name="nom" 
-                    placeholder="Nom (Last Name)" 
+                    placeholder={t('signup_nom_placeholder')} 
                     className="auth-input" 
                     onChange={handleChange} 
                     required 
@@ -121,7 +122,7 @@ function Inscription() {
             <input 
                 type="email" 
                 name="email" 
-                placeholder="Email Address" 
+                placeholder={t('signup_email_placeholder')} 
                 className="auth-input" 
                 onChange={handleChange} 
                 required 
@@ -131,7 +132,7 @@ function Inscription() {
               <input 
                   type={showPassword ? "text" : "password"} 
                   name="password" 
-                  placeholder="Password" 
+                  placeholder={t('signup_password_placeholder')} 
                   className="auth-input" 
                   onChange={handleChange} 
                   required 
@@ -145,23 +146,23 @@ function Inscription() {
             
             {/* ✅ 3. VALEURS CORRIGÉES ICI */}
             <select name="role" className="auth-input" onChange={handleChange}>
-              <option value="conducteur">I am a Driver (Conducteur)</option>
-              <option value="gestionnaire">I am a Manager (Gestionnaire)</option>
+              <option value="conducteur">{t('signup_role_driver')}</option>
+              <option value="gestionnaire">{t('signup_role_manager')}</option>
             </select>
 
-            <button type="submit" className="btn-primary-auth">Sign Up</button>
+            <button type="submit" className="btn-primary-auth">{t('signup_submit')}</button>
           </form>
           
           {error && <div style={{color: 'red', marginTop: '10px', fontSize: '0.9rem', textAlign: 'center'}}>{error}</div>}
           
-          <div className="divider"><span>OR</span></div>
+          <div className="divider"><span>{t('signup_or')}</span></div>
 
           <button type="button" className="btn-google" onClick={() => alert("Simulation Google")}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="google-icon" />
-            Sign Up with Google
+            {t('signup_google')}
           </button>
           <div className="auth-footer">
-            Already have an account? <Link to="/signin" className="auth-link">Sign in</Link>
+            {t('signup_already')} <Link to="/signin" className="auth-link">{t('signup_signin')}</Link>
           </div>
         </div>
       </div>
