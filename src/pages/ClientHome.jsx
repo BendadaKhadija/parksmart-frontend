@@ -217,9 +217,8 @@ const [imagePreview, setImagePreview] = useState(null);
       alert("⚠️ Votre navigateur ne supporte pas la géolocalisation.");
       setUserPosition([34.020882, -6.841650]);
     } else {
-        const isSecure = window.isSecureContext;
-
-        // 1. Position rapide d'abord (cache autorisé) pour affichage immédiat
+        // Demander la permission et obtenir la position exacte
+        // enableHighAccuracy: true FORCE le GPS hardware (pas juste le WiFi/IP)
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             const { latitude, longitude, accuracy } = pos.coords;
@@ -228,15 +227,16 @@ const [imagePreview, setImagePreview] = useState(null);
           },
           (err) => {
             console.warn(`⚠️ GPS rapide échoué (code ${err.code}), position par défaut.`);
-            // Si l'erreur est un refus de permission (code 1), on avertit l'utilisateur une seule fois
             if (err.code === 1) {
-                alert("⚠️ Accès à la localisation refusé. Veuillez activer la localisation dans les paramètres de votre navigateur/système pour voir votre position exacte.");
+                alert("📍 Pour voir votre position exacte, veuillez autoriser la localisation :\n\n1. Ouvrez les Paramètres de votre téléphone\n2. Activez la Localisation/GPS\n3. Dans votre navigateur, autorisez ce site à accéder à votre position\n4. Rechargez la page");
             } else if (err.code === 2) {
-                alert("⚠️ Localisation indisponible. Vérifiez que votre GPS est activé.");
+                alert("📍 GPS indisponible. Activez le GPS dans les paramètres de votre téléphone puis rechargez la page.");
+            } else if (err.code === 3) {
+                alert("📍 Le GPS met trop de temps à répondre. Vérifiez que votre GPS est activé et rechargez la page.");
             }
-            setUserPosition([34.020882, -6.841650]); // Position par défaut (Rabat)
+            setUserPosition([34.020882, -6.841650]);
           },
-          { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 } // Augmenté le timeout à 10s pour être sûr
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
         );
 
         // 2. Puis suivi précis en arrière-plan pour affiner
@@ -250,8 +250,8 @@ const [imagePreview, setImagePreview] = useState(null);
             console.warn(`⚠️ Erreur Suivi GPS (code ${err.code}): ${err.message}`);
           },
           { 
-            enableHighAccuracy: isSecure,
-            timeout: 15000,
+            enableHighAccuracy: true,
+            timeout: 20000,
             maximumAge: 10000 
           }
         );
