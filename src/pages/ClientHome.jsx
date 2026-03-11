@@ -267,7 +267,7 @@ const [imagePreview, setImagePreview] = useState(null);
     if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         setUserData({ 
-          id: parsedUser.id,        
+          id: parsedUser.id_cond || parsedUser.id || parsedUser.id_utilisateur,        
           prenom: parsedUser.prenom || '', 
           nom: parsedUser.nom || '', 
           email: parsedUser.email || '',
@@ -454,20 +454,25 @@ const handleUpdateUser = async () => {
     try {
         const formData = new FormData();
         
+        // Envoyer l'ID utilisateur (comme le fait DashboardManager)
+        const storedUser = JSON.parse(sessionStorage.getItem('user'));
+        const idUser = storedUser?.id_cond || storedUser?.id || storedUser?.id_utilisateur;
+        if (idUser) formData.append('id_user', idUser);
+        
         formData.append('nom', userData.nom);
         formData.append('prenom', userData.prenom);
         formData.append('email', userData.email);
 
         if (imageFile) {
-            formData.append('avatar', imageFile); // Assurez-vous que le backend attend 'avatar' !
+            formData.append('image', imageFile); // Même nom que l'inscription et le manager
         }
         
         const url = `${import.meta.env.VITE_API_URL}/api/user/update`;
         
         const response = await axios.post(url, formData, {
             headers: {
-                // Laissez Axios gérer le Content-Type tout seul !
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                'Content-Type': 'multipart/form-data'
             }
         });
 
@@ -524,11 +529,35 @@ const handleUpdateUser = async () => {
 };
   const handleUpdatePassword = async () => {
       if(passwordData.new !== passwordData.confirm) { alert("⚠️ Mots de passe différents !"); return; }
-      const token = sessionStorage.getItem('token');
+      
       try {
-          await axios.put(`${import.meta.env.VITE_API_URL}/api/user/password`, { currentPassword: passwordData.current, newPassword: passwordData.new }, { headers: { Authorization: `Bearer ${token}` } });
-          alert("✅ Mot de passe modifié !"); setProfilePage('main'); setPasswordData({ current: '', new: '', confirm: '' });
-      } catch (error) { alert("❌ " + (error.response?.data?.message || "Erreur serveur")); }
+          // Utilisation de la route générique de mise à jour utilisateur avec le champ password
+          const formData = new FormData();
+          const storedUser = JSON.parse(sessionStorage.getItem('user'));
+          const idUser = storedUser?.id_cond || storedUser?.id || storedUser?.id_utilisateur;
+          
+          if (idUser) formData.append('id_user', idUser);
+          formData.append('password', passwordData.new); // On envoie le nouveau mot de passe
+          // On peut aussi envoyer currentPassword si le backend le demande pour vérification
+          formData.append('currentPassword', passwordData.current); 
+
+          const token = sessionStorage.getItem('token');
+          // On tente d'utiliser la route de mise à jour globale qui existe (POST /api/user/update)
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/user/update`, formData, { 
+              headers: { 
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'multipart/form-data'
+              } 
+          });
+
+          alert("✅ Mot de passe modifié !"); 
+          setProfilePage('main'); 
+          setPasswordData({ current: '', new: '', confirm: '' });
+
+      } catch (error) { 
+          console.error("Erreur Password:", error);
+          alert("❌ " + (error.response?.data?.message || "Erreur serveur ou route introuvable")); 
+      }
   };
   
   const performLogout = () => { sessionStorage.clear(); window.location.href = '/connexion'; };
