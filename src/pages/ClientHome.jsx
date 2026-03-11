@@ -214,7 +214,7 @@ const [imagePreview, setImagePreview] = useState(null);
     let watchId = null;
 
     if (!navigator.geolocation) {
-      console.warn("⚠️ Geolocation non disponible. Position par défaut.");
+      alert("⚠️ Votre navigateur ne supporte pas la géolocalisation.");
       setUserPosition([34.020882, -6.841650]);
     } else {
         const isSecure = window.isSecureContext;
@@ -228,9 +228,15 @@ const [imagePreview, setImagePreview] = useState(null);
           },
           (err) => {
             console.warn(`⚠️ GPS rapide échoué (code ${err.code}), position par défaut.`);
-            setUserPosition([34.020882, -6.841650]);
+            // Si l'erreur est un refus de permission (code 1), on avertit l'utilisateur une seule fois
+            if (err.code === 1) {
+                alert("⚠️ Accès à la localisation refusé. Veuillez activer la localisation dans les paramètres de votre navigateur/système pour voir votre position exacte.");
+            } else if (err.code === 2) {
+                alert("⚠️ Localisation indisponible. Vérifiez que votre GPS est activé.");
+            }
+            setUserPosition([34.020882, -6.841650]); // Position par défaut (Rabat)
           },
-          { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 } // Augmenté le timeout à 10s pour être sûr
         );
 
         // 2. Puis suivi précis en arrière-plan pour affiner
