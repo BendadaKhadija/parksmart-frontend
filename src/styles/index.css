@@ -108,23 +108,26 @@ a { text-decoration: none; color: inherit; }
 
 /* Language Switcher */
 .lang-switcher {
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
   border-radius: 30px;
-  border: 1px solid #8fdbab;
-  background: transparent;
+  border: 2px solid #6c9a75;
+  background: #f0f9f2;
   color: #6c9a75;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
   font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+  min-width: 70px;
 }
 .lang-switcher:hover {
-  background: #e8f5ee;
-  color: #4a7d58;
+  background: #6c9a75;
+  color: #fff;
+  transform: scale(1.05);
 }
 .lang-flag {
   font-size: 18px;
