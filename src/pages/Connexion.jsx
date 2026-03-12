@@ -101,10 +101,14 @@ function Connexion() {
       }
     }
   };
-
-  return (
+return (
     <div className="auth-container">
       <div className="auth-card">
+        
+        {/* 1. On garde la div pour que la boîte reste à sa place et affiche l'image du CSS */}
+        <div className="auth-image-side"></div>
+
+        {/* 2. Votre formulaire reste bien à droite */}
         <div className="auth-form-side">
           <h2>{t('login_welcome')}</h2>
           <p>{t('login_subtitle')}</p>
@@ -115,7 +119,6 @@ function Connexion() {
               alt="Profile" 
             />
           </div>
-
           <form onSubmit={handleLogin} className="auth-form">
             <input 
               type="email" 
