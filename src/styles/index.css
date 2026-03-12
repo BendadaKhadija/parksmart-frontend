@@ -436,7 +436,6 @@ a { text-decoration: none; color: inherit; }
   background-position: center;
   position: relative;
   min-height: 100%; /* Prend toute la hauteur disponible */
-  border: 2px solid red;
   background-color: #eee;
 }
 
