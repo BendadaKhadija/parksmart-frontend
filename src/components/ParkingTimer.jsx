@@ -12,14 +12,14 @@ function ProcessingStep({ onDone, styles, t }) {
     useEffect(() => {
         const timer = setTimeout(() => onDoneRef.current(), 1200);
         return () => clearTimeout(timer);
-    }, []);
+    }, [onDoneRef]);
     return (
         <div style={{ ...styles.container, justifyContent: 'center', alignItems: 'center' }}>
             <div className="spinner" style={{ width: '50px', height: '50px', border: '5px solid #eee', borderTop: '5px solid #6c9a75', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
             <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            <h3 style={{ marginTop: '20px', color: '#333' }}>Connexion à la banque...</h3>
+            <h3 style={{ marginTop: '20px', color: '#333' }}>{t('timer_processing_bank')}</h3>
             <p style={{ color: '#666', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>
-                Veuillez ne pas fermer cette fenêtre pendant le traitement sécurisé.
+                {t('timer_processing_wait')}
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '30px', color: '#888', fontSize: '12px' }}>
                 <FaLock /> {t('timer_3d_secure')}
@@ -201,7 +201,7 @@ const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
         const finalId = confirmedId || reservation.id_resa || reservation.id;
 
         if (!finalId) {
-            alert("Erreur critique : ID Réservation introuvable");
+            alert(t('error_generic')); // Generic error
             setIsLoading(false);
             return;
         }        
@@ -217,7 +217,7 @@ const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
                 headers: { Authorization: `Bearer ${token}` } 
             });
 
-            alert("✅ Paiement validé ! Merci et à bientôt.");
+            alert(t('alert_payment_success'));
             if (onStop) {
                 onStop(); 
             } else {
@@ -226,7 +226,7 @@ const ParkingTimer = ({ reservation, onStop, onPaymentStart }) => {
 
         } catch (error) {
             console.error("Erreur Paiement:", error);
-            alert("❌ Erreur de connexion lors du paiement.");
+            alert(t('alert_payment_error'));
         } finally {
             setIsLoading(false);
         }
@@ -277,7 +277,7 @@ if (!reservation) {
                     <div style={styles.priceRow}><span>3 Heures</span> <span>12.00 DH</span></div>
                 </div>
                 <button style={styles.mainButton} onClick={handleStop} disabled={isLoading}>
-                    {isLoading ? "CALCUL..." : t('timer_pay_now')}
+                    {isLoading ? t('timer_calculating') : t('timer_pay_now')}
                 </button>
             </div>
         );
@@ -294,10 +294,10 @@ if (!reservation) {
                 <h4 style={{marginBottom:'20px'}}>{t('timer_choose_method')}</h4>
 
                 {[
-                    {id:'credit_card', icon: <FaCreditCard color="#333" size={24}/>, label: "Carte Bancaire (Sécurisé)"},
-                    {id:'paypal', icon: <FaPaypal color="#003087" size={24}/>, label: "Paypal"},
-                    {id:'google', icon: <FaGoogle color="#DB4437" size={24}/>, label: "Google Pay"},
-                    {id:'apple', icon: <FaApple color="#000" size={24}/>, label: "Apple Pay"}
+                    {id:'credit_card', icon: <FaCreditCard color="#333" size={24}/>, label: t('timer_method_card')},
+                    {id:'paypal', icon: <FaPaypal color="#003087" size={24}/>, label: t('timer_method_paypal')},
+                    {id:'google', icon: <FaGoogle color="#DB4437" size={24}/>, label: t('timer_method_google')},
+                    {id:'apple', icon: <FaApple color="#000" size={24}/>, label: t('timer_method_apple')}
                 ].map(opt => (
                     <div key={opt.id} style={paymentMethod === opt.id ? styles.optionActive : styles.option} onClick={() => setPaymentMethod(opt.id)}>
                         <div style={{display:'flex', gap:'15px', alignItems:'center'}}>{opt.icon} <b>{opt.label}</b></div>
@@ -321,19 +321,19 @@ if (!reservation) {
         const handleCardSubmit = () => {
             const { number, expiry, cvv, name } = cardDetails;
             if (!number || number.length < 16) {
-                setCardError('Veuillez entrer un numéro de carte valide.');
+                setCardError(t('error_generic'));
                 return;
             }
             if (!expiry || expiry.length < 5) {
-                setCardError('Veuillez entrer une date d\'expiration valide.');
+                setCardError(t('error_generic'));
                 return;
             }
             if (!cvv || cvv.length < 3) {
-                setCardError('Veuillez entrer un CVV valide.');
+                setCardError(t('error_generic'));
                 return;
             }
             if (!name || name.length < 2) {
-                setCardError('Veuillez entrer le nom sur la carte.');
+                setCardError(t('error_generic'));
                 return;
             }
             setCardError('');
@@ -344,18 +344,18 @@ if (!reservation) {
             <div style={styles.container}>
                 <div style={styles.header}>
                     <FaArrowLeft onClick={() => setStep('payment')} style={{cursor:'pointer'}} />
-                    <h2 style={styles.title}>Détails de la Carte</h2>
+                    <h2 style={styles.title}>{t('timer_card_details_title')}</h2>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                     <div style={{ position: 'relative' }}>
-                        <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>Numéro de carte</label>
+                        <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>{t('timer_card_number')}</label>
                         <input type="text" placeholder="1234 5678 9101 1121" maxLength="19" style={{...styles.inputField, borderColor: cardError && !cardDetails.number ? 'red' : '#ccc'}} value={cardDetails.number} onChange={(e) => setCardDetails({...cardDetails, number: e.target.value})} />
                         <FaCreditCard style={{ position: 'absolute', right: '15px', top: '35px', color: '#aaa' }} />
                     </div>
                     <div style={{ display: 'flex', gap: '15px' }}>
                         <div style={{ flex: 1 }}>
-                            <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>Date d'exp.</label>
+                            <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>{t('timer_card_expiry')}</label>
                             <input type="text" placeholder="MM/YY" maxLength="5" style={{...styles.inputField, borderColor: cardError && !cardDetails.expiry ? 'red' : '#ccc'}} value={cardDetails.expiry} onChange={(e) => {
                                 let val = e.target.value.replace(/\D/g, '');
                                 if (val.length >= 3) { val = val.slice(0,2) + '/' + val.slice(2,4); }
@@ -363,13 +363,13 @@ if (!reservation) {
                             }} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>CVV</label>
+                            <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>{t('timer_card_cvv')}</label>
                             <input type="password" placeholder="123" maxLength="3" style={{...styles.inputField, borderColor: cardError && !cardDetails.cvv ? 'red' : '#ccc'}} value={cardDetails.cvv} onChange={(e) => setCardDetails({...cardDetails, cvv: e.target.value.replace(/\D/g, '')})} />
                         </div>
                     </div>
                     <div>
-                        <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>Nom sur la carte</label>
-                        <input type="text" placeholder="Titulaire de la carte" style={{...styles.inputField, borderColor: cardError && !cardDetails.name ? 'red' : '#ccc'}} value={cardDetails.name} onChange={(e) => setCardDetails({...cardDetails, name: e.target.value})} />
+                        <label style={{ fontSize: '14px', color: '#555', marginBottom: '5px', display: 'block', fontWeight: 'bold' }}>{t('timer_card_name')}</label>
+                        <input type="text" placeholder={t('timer_card_name_placeholder')} style={{...styles.inputField, borderColor: cardError && !cardDetails.name ? 'red' : '#ccc'}} value={cardDetails.name} onChange={(e) => setCardDetails({...cardDetails, name: e.target.value})} />
                     </div>
                 </div>
 
@@ -377,11 +377,11 @@ if (!reservation) {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '20px', color: '#6c9a75', fontSize: '14px', backgroundColor: '#f0f9f0', padding: '10px', borderRadius: '8px' }}>
                     <FaLock />
-                    <span>Vos informations de paiement sont sécurisées avec un chiffrement SSL 256-bit.</span>
+                    <span>{t('timer_card_secure_info')}</span>
                 </div>
 
                 <button style={{ ...styles.mainButton, marginTop: '30px' }} onClick={handleCardSubmit}>
-                    Payer {parseFloat(billData?.montant || 0).toFixed(2)} DH
+                    {t('timer_card_pay_button', { amount: parseFloat(billData?.montant || 0).toFixed(2) })}
                 </button>
             </div>
         );

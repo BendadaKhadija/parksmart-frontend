@@ -431,7 +431,7 @@ a { text-decoration: none; color: inherit; }
 /* GAUCHE : L'Image */
 .auth-image-side {
   width: 50%; /* Force la largeur */
-  background-image: url('../public/cnx.png'); /* Image de fond */
+  background-image: url('/cnx.png'); /* Image de fond */
   background-size: cover;
   background-position: center;
   position: relative;

@@ -106,8 +106,10 @@ function Connexion() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        
-        <div className="auth-image-side"></div>
+        {/* Ajout de l'image cnx.png */}
+        <div className="auth-image-side">
+          <img src="/cnx.png" alt="Connexion" style={{ width: '100%', maxWidth: '300px', margin: '0 auto', display: 'block' }} />
+        </div>
 
         <div className="auth-form-side">
           <h2>{t('login_welcome')}</h2>

@@ -3,13 +3,15 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth"; 
 import { getMessaging, getToken, isSupported, onMessage } from "firebase/messaging"; // 👈 On importe 'isSupported' et 'onMessage'
 
+// 🔒 Sécurité : Les clés de configuration ne doivent jamais être en clair dans le code.
+// Utilisez des variables d'environnement comme décrit dans votre rapport.
 const firebaseConfig = {
-  apiKey: "AIzaSyBvLnDH1RHKzCSJxidecZZYgEo_30dwGrM",
-  authDomain: "parksmart-44ee4.firebaseapp.com",
-  projectId: "parksmart-44ee4",
-  storageBucket: "parksmart-44ee4.firebasestorage.app",
-  messagingSenderId: "936828579738",
-  appId: "1:936828579738:web:08a585ad48a9b500925423"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -40,8 +42,7 @@ export const requestFirebaseToken = async () => {
     
     if (permission === 'granted') {
       const token = await getToken(messaging, { 
-        // ⚠️ N'oublie pas de mettre ta vraie VAPID Key ici si tu l'as trouvée !
-        vapidKey: "BF_dxKl4YZXYLpFE0XdIFj1mFAHAtuahx41XzJ258vW" 
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
       });
       console.log('✅ FCM Token généré :', token);
       return token;

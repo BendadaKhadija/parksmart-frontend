@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import ReactCountryFlag from "react-country-flag";
 const translations = {
   fr: {
     // --- Navbar ---
@@ -145,6 +145,52 @@ const translations = {
     home_reviews: "Avis",
     home_place_available: "Place Disponible",
     home_continue: "Continuer",
+    home_search_placeholder: "Rechercher un parking...",
+    grid_choose_spot: "Choisir une place",
+    grid_parking_plan: "Plan du Parking",
+    grid_scroll_hint: "Glissez pour voir plus",
+    grid_book_button: "Réserver",
+    grid_book_button_spot: "Réserver (Place #{spot})",
+    alert_spot_reserved: "Place réservée ! Le chronomètre démarre.",
+    alert_booking_error: "Erreur lors de la réservation.",
+    logout_confirm_title: "Voulez-vous vraiment vous déconnecter ?",
+    logout_confirm_button: "Se déconnecter",
+    cancel: "Annuler",
+
+    // --- Profile Page ---
+    profile_title: "Mon Profil",
+    profile_title_details: "Modifier le profil",
+    profile_title_payment: "Paiement",
+    profile_title_security: "Sécurité",
+    profile_title_legal: "Mentions Légales",
+    profile_title_help: "Aide & Support",
+    profile_title_about: "À Propos de nous",
+    profile_title_profile: "Mon Profil Détaillé",
+    profile_view: "Voir",
+    profile_section_personal: "Personnel",
+    profile_section_security: "Sécurité",
+    profile_section_about: "À propos",
+    profile_logout: "Se déconnecter",
+    profile_edit_change_photo: "Changer la photo",
+    profile_edit_firstname: "Prénom",
+    profile_edit_lastname: "Nom",
+    profile_edit_email: "E-Mail",
+    profile_edit_save: "Enregistrer les modifications",
+    alert_profile_updated: "Profil mis à jour avec succès !",
+    alert_profile_update_error: "Erreur lors de la mise à jour du profil.",
+    profile_sec_current_pass: "Mot de passe actuel",
+    profile_sec_new_pass: "Nouveau mot de passe",
+    profile_sec_confirm_pass: "Confirmer",
+    profile_sec_update_pass: "Mettre à jour le mot de passe",
+    alert_pass_mismatch: "Les mots de passe ne correspondent pas !",
+    alert_pass_updated: "Mot de passe modifié avec succès !",
+    alert_pass_update_error: "Erreur lors de la modification du mot de passe.",
+    profile_detail_member_since: "Membre depuis",
+    profile_detail_my_activity: "Mon Activité",
+    profile_detail_reservations: "Réservations",
+    profile_detail_total_time: "Temps Total",
+    loading: "Chargement...",
+    error_generic: "Une erreur est survenue.",
 
     // --- Language ---
     lang_switch: "EN",
@@ -293,6 +339,52 @@ const translations = {
     home_reviews: "Reviews",
     home_place_available: "Place Available",
     home_continue: "Continue",
+    home_search_placeholder: "Search for a parking...",
+    grid_choose_spot: "Choose a Spot",
+    grid_parking_plan: "Parking Layout",
+    grid_scroll_hint: "Swipe to see more",
+    grid_book_button: "Book",
+    grid_book_button_spot: "Book (Spot #{spot})",
+    alert_spot_reserved: "Spot reserved! The timer is starting.",
+    alert_booking_error: "Error during reservation.",
+    logout_confirm_title: "Do you really want to log out?",
+    logout_confirm_button: "Log Out",
+    cancel: "Cancel",
+
+    // --- Profile Page ---
+    profile_title: "My Profile",
+    profile_title_details: "Edit Profile",
+    profile_title_payment: "Payment",
+    profile_title_security: "Security",
+    profile_title_legal: "Legal Notice",
+    profile_title_help: "Help & Support",
+    profile_title_about: "About Us",
+    profile_title_profile: "My Detailed Profile",
+    profile_view: "View",
+    profile_section_personal: "Personal",
+    profile_section_security: "Security",
+    profile_section_about: "About",
+    profile_logout: "Log Out",
+    profile_edit_change_photo: "Change Photo",
+    profile_edit_firstname: "First Name",
+    profile_edit_lastname: "Last Name",
+    profile_edit_email: "E-Mail",
+    profile_edit_save: "Save Changes",
+    alert_profile_updated: "Profile updated successfully!",
+    alert_profile_update_error: "Error updating profile.",
+    profile_sec_current_pass: "Current Password",
+    profile_sec_new_pass: "New Password",
+    profile_sec_confirm_pass: "Confirm",
+    profile_sec_update_pass: "Update Password",
+    alert_pass_mismatch: "Passwords do not match!",
+    alert_pass_updated: "Password changed successfully!",
+    alert_pass_update_error: "Error changing password.",
+    profile_detail_member_since: "Member since",
+    profile_detail_my_activity: "My Activity",
+    profile_detail_reservations: "Reservations",
+    profile_detail_total_time: "Total Time",
+    loading: "Loading...",
+    error_generic: "An error occurred.",
 
     // --- Language ---
     lang_switch: "FR",
@@ -311,7 +403,11 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const t = (key) => translations[lang]?.[key] || translations['fr']?.[key] || key;
+  const t = useCallback((key, params = {}) => {
+    let translation = translations[lang]?.[key] || translations['fr']?.[key] || key;
+    Object.keys(params).forEach(p => translation = translation.replace(`{${p}}`, params[p]));
+    return translation;
+  }, [lang]);
   const toggleLang = () => setLang(prev => prev === 'fr' ? 'en' : 'fr');
 
   return (
@@ -326,19 +422,24 @@ export function useTranslation() {
   if (!context) throw new Error('useTranslation must be used within LanguageProvider');
   return context;
 }
-
 export function LanguageSwitcher({ className = '' }) {
-  const { lang, toggleLang, t } = useTranslation();
-  
-  return (
-    <button
-      onClick={toggleLang}
-      className={`lang-switcher ${className}`}
-      title={lang === 'fr' ? 'Switch to English' : 'Passer en Français'}
-      aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en Français'}
-    >
-      <span className="lang-flag">{lang === 'fr' ? '🇬🇧' : '🇫🇷'}</span>
-      <span className="lang-label">{t('lang_switch')}</span>
-    </button>
-  );
+  const { lang, toggleLang, t } = useTranslation();
+  
+  return (
+    <button
+      onClick={toggleLang}
+      className={`lang-switcher ${className}`}
+      title={lang === 'fr' ? 'Switch to English' : 'Passer en Français'}
+      aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en Français'}
+      style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+    >
+      {/* On utilise ReactCountryFlag qui affichera un vrai SVG même sur Windows */}
+      <ReactCountryFlag 
+        countryCode={lang === 'fr' ? 'GB' : 'FR'} 
+        svg 
+        style={{ width: '24px', height: '24px', borderRadius: '2px' }} 
+      />
+      <span className="lang-label" style={{ fontWeight: 'bold' }}>{t('lang_switch')}</span>
+    </button>
+  );
 }

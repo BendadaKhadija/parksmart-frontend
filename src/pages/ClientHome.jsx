@@ -11,7 +11,7 @@ import { FaCamera } from 'react-icons/fa';
 import ClientHistory from './ClientHistory';
 import Notification from './Notifications.jsx';
 import { useTranslation } from '../i18n.jsx';
-
+import { LanguageSwitcher } from '../i18n.jsx';
 
 // --- CONFIG ICONS DELETED TO USE DYNAMIC ONES INSIDE COMPONENT ---
 
@@ -416,7 +416,7 @@ useEffect(() => {
           // On met à jour l'affichage de la grille
           setOccupiedSpots([...occupiedSpots, chosenSpot]); 
           setShowGrid(false); 
-          alert("✅ Place réservée ! Le chronomètre démarre.");
+          alert(t('alert_spot_reserved'));
 
       } catch (error) {
           console.error("Erreur API Réservation :", error.response || error);
@@ -485,7 +485,7 @@ const handleUpdateUser = async () => {
         });
 
         if (response.status === 200) {
-            alert("Profil mis à jour avec succès !");
+            alert(t('alert_profile_updated'));
             
             // On récupère l'user mis à jour (gestion de la structure de réponse)
             let updatedUser = response.data.user || (response.data.id_user ? response.data : null);
@@ -532,11 +532,11 @@ const handleUpdateUser = async () => {
         }
     } catch (error) {
         console.error("Erreur mise à jour:", error);
-        alert("Erreur lors de la mise à jour du profil.");
+        alert(t('alert_profile_update_error'));
     }
 };
   const handleUpdatePassword = async () => {
-      if(passwordData.new !== passwordData.confirm) { alert("⚠️ Mots de passe différents !"); return; }
+      if(passwordData.new !== passwordData.confirm) { alert(t('alert_pass_mismatch')); return; }
       
       try {
           // Utilisation de la route générique de mise à jour utilisateur avec le champ password
@@ -558,17 +558,17 @@ const handleUpdateUser = async () => {
               } 
           });
 
-          alert("✅ Mot de passe modifié !"); 
+          alert(t('alert_pass_updated')); 
           setProfilePage('main'); 
           setPasswordData({ current: '', new: '', confirm: '' });
 
       } catch (error) { 
           console.error("Erreur Password:", error);
-          alert("❌ " + (error.response?.data?.message || "Erreur serveur ou route introuvable")); 
+          alert("❌ " + (error.response?.data?.message || t('alert_pass_update_error'))); 
       }
   };
   
-  const performLogout = () => { sessionStorage.clear(); window.location.href = '/connexion'; };
+  const performLogout = () => { sessionStorage.clear(); window.location.href = '/signin'; };
   const handleChange = (e) => setUserData({ ...userData, [e.target.name]: e.target.value });
   const handlePassChange = (e) => setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
 
@@ -603,7 +603,7 @@ const handleUpdateUser = async () => {
 };
 const renderGridRows = () => {
     if (!selectedParking) {
-        return <div style={{ padding: '20px', textAlign: 'center' }}>Chargement des places...</div>;
+        return <div style={{ padding: '20px', textAlign: 'center' }}>{t('loading')}</div>;
     }
 
     // 1. On prend les vraies données du parking actuel (100% dynamique)
@@ -634,7 +634,7 @@ const renderGridRows = () => {
         <div className="parking-layout-container">
             {showScrollHint && (
                 <div className="scroll-hint">
-                    Glissez pour voir plus <i className="fa-solid fa-arrow-right-long"></i>
+                    {t('grid_scroll_hint')} <i className="fa-solid fa-arrow-right-long"></i>
                 </div>
             )}
             <div className="parking-scroll-area">
@@ -692,14 +692,14 @@ const renderProfileContent = () => {
     }
     
     // Titres dynamiques
-    let title = "Mon Profil";
-    if(profilePage === 'details') title = "Modifier le profil";
-    if(profilePage === 'payment') title = "Paiement";
-    if(profilePage === 'security') title = "Sécurité";
-    if(profilePage === 'legal') title = "Mentions Légales";
-    if(profilePage === 'help') title = "Aide & Support";
-    if(profilePage === 'about') title = "À Propos de nous";
-    if(profilePage === 'profile') title = "Mon Profil Détaillé";
+    let title = t('profile_title');
+    if(profilePage === 'details') title = t('profile_title_details');
+    if(profilePage === 'payment') title = t('profile_title_payment');
+    if(profilePage === 'security') title = t('profile_title_security');
+    if(profilePage === 'legal') title = t('profile_title_legal');
+    if(profilePage === 'help') title = t('profile_title_help');
+    if(profilePage === 'about') title = t('profile_title_about');
+    if(profilePage === 'profile') title = t('profile_title_profile');
 
             // En-tête commun
             const header = (
@@ -744,43 +744,50 @@ const renderProfileContent = () => {
                         <p>{userData.email}</p>
                     </div>
                     <button className="btn-view-profile" onClick={() => setProfilePage('profile')}>
-                      <i className="fa-solid fa-eye"></i> Voir
+                      <i className="fa-solid fa-eye"></i> {t('profile_view')}
                     </button>
                 </div>
 
                 <div className="menu-section">
-                    <span className="section-title">Personnel</span>
+                    <span className="section-title">{t('profile_section_personal')}</span>
                     <div className="menu-item" onClick={() => setProfilePage('details')}>
                         <div className="icon-box"><i className="fa-solid fa-user-pen"></i></div>
-                        <span className="menu-label">Modifier le profil</span>
+                        <span className="menu-label">{t('profile_title_details')}</span>
                         <i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                     <div className="menu-item" onClick={() => setProfilePage('payment')}>
                         <div className="icon-box"><i className="fa-solid fa-wallet"></i></div>
-                        <span className="menu-label">Méthodes de Paiement</span>
+                        <span className="menu-label">{t('profile_title_payment')}</span>
                         <i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                 </div>
                 
                 <div className="menu-section">
-                    <span className="section-title">Sécurité</span>
+                    <span className="section-title">{t('profile_section_security')}</span>
                     <div className="menu-item" onClick={() => setProfilePage('security')}>
                         <div className="icon-box"><i className="fa-solid fa-lock"></i></div>
-                        <span className="menu-label">Changer Mot de passe</span>
+                        <span className="menu-label">{t('profile_title_security')}</span>
                         <i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                 </div>
 
                 <div className="menu-section">
-                    <span className="section-title">À propos</span>
+                    <span className="section-title">{t('profile_section_about')}</span>
+                    {/* --- AJOUT DU BOUTON POUR CHANGER DE LANGUE --- */}
+                    <div className="menu-item">
+                        <div className="icon-box"><i className="fa-solid fa-globe"></i></div>
+                        <span className="menu-label">{t('lang') === 'fr' ? 'Langue' : 'Language'}</span>
+                        <LanguageSwitcher />
+                    </div>
+
                     <div className="menu-item" onClick={() => setProfilePage('about')}>
                         <div className="icon-box"><i className="fa-solid fa-info"></i></div>
-                        <span className="menu-label">À Propos de nous</span>
+                        <span className="menu-label">{t('profile_title_about')}</span>
                         <i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                     <div className="menu-item" onClick={() => setProfilePage('legal')}>
                         <div className="icon-box"><i className="fa-solid fa-file-shield"></i></div>
-                        <span className="menu-label">Mentions Légales</span>
+                        <span className="menu-label">{t('profile_title_legal')}</span>
                         <i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                     <div className="menu-item" onClick={() => setProfilePage('help')}>
@@ -790,7 +797,7 @@ const renderProfileContent = () => {
                 </div>
                 
                 <button className="btn-logout" onClick={() => setShowLogoutModal(true)}>
-                    Se déconnecter <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                    {t('profile_logout')} <i className="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </div>
         );
@@ -819,38 +826,38 @@ const renderProfileContent = () => {
                     }}
                 />
                 <label style={{marginTop: 10, color: '#007bff', cursor: 'pointer', fontWeight:'bold'}}>
-                    <i className="fa-solid fa-camera"></i> Changer la photo
+                    <i className="fa-solid fa-camera"></i> {t('profile_edit_change_photo')}
                     <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} />
                 </label>
             </div>
 
             {/* Champ PRÉNOM */}
 <div className="form-group fade-in-element" style={{animationDelay: '0.2s'}}>
-    <label>Prénom</label>
+    <label>{t('profile_edit_firstname')}</label>
     <input 
         type="text" 
         name="prenom" 
         value={userData.prenom} 
         onChange={handleChange} 
-        placeholder="Votre prénom"
+        placeholder={t('signup_prenom_placeholder')}
     />
 </div>
 
             <div className="form-group fade-in-element" style={{animationDelay: '0.3s'}}>
-                <label>Nom</label>
+                <label>{t('profile_edit_lastname')}</label>
                 <input 
                     type="text" 
                     name="nom" 
                     value={userData.nom} 
                     onChange={handleChange} 
-                    placeholder="Votre nom"
+                    placeholder={t('signup_nom_placeholder')}
                 />
             </div>
             <div className="form-group fade-in-element" style={{animationDelay: '0.4s'}}>
-                <label>E-Mail</label>
+                <label>{t('profile_edit_email')}</label>
                 <input type="text" name="email" value={userData.email} onChange={handleChange} />
             </div>
-            <button className="btn-save fade-in-element" style={{animationDelay: '0.5s'}} onClick={handleUpdateUser}>Enregistrer les modifications</button>
+            <button className="btn-save fade-in-element" style={{animationDelay: '0.5s'}} onClick={handleUpdateUser}>{t('profile_edit_save')}</button>
         </div>
     );
 
@@ -858,19 +865,19 @@ const renderProfileContent = () => {
     if (profilePage === 'security') return (
         <div className="profile-subpage">
             {header}
-            <div className="form-group fade-in-element" style={{animationDelay: '0.1s'}}><label>Mot de passe actuel</label><input type="password" name="current" placeholder="••••••••" value={passwordData.current} onChange={handlePassChange} /></div>
-            <div className="form-group fade-in-element" style={{animationDelay: '0.2s'}}><label>Nouveau mot de passe</label><input type="password" name="new" placeholder="••••••••" value={passwordData.new} onChange={handlePassChange} /></div>
-            <div className="form-group fade-in-element" style={{animationDelay: '0.3s'}}><label>Confirmer</label><input type="password" name="confirm" placeholder="••••••••" value={passwordData.confirm} onChange={handlePassChange} /></div>
-            <button className="btn-save fade-in-element" style={{animationDelay: '0.4s'}} onClick={handleUpdatePassword}>Mettre à jour le mot de passe</button>
+            <div className="form-group fade-in-element" style={{animationDelay: '0.1s'}}><label>{t('profile_sec_current_pass')}</label><input type="password" name="current" placeholder="••••••••" value={passwordData.current} onChange={handlePassChange} /></div>
+            <div className="form-group fade-in-element" style={{animationDelay: '0.2s'}}><label>{t('profile_sec_new_pass')}</label><input type="password" name="new" placeholder="••••••••" value={passwordData.new} onChange={handlePassChange} /></div>
+            <div className="form-group fade-in-element" style={{animationDelay: '0.3s'}}><label>{t('profile_sec_confirm_pass')}</label><input type="password" name="confirm" placeholder="••••••••" value={passwordData.confirm} onChange={handlePassChange} /></div>
+            <button className="btn-save fade-in-element" style={{animationDelay: '0.4s'}} onClick={handleUpdatePassword}>{t('profile_sec_update_pass')}</button>
         </div>
     );
     
     if (profilePage === 'payment') return (
         <div className="profile-subpage">
             {header}
-            <div className="payment-option fade-in-element" style={{animationDelay: '0.1s'}}><div className="pay-left"><i className="fa-brands fa-paypal" style={{color:'#003087'}}></i> Paypal</div><input type="radio" name="payment" /></div>
-            <div className="payment-option fade-in-element" style={{animationDelay: '0.2s'}}><div className="pay-left"><i className="fa-brands fa-google" style={{color:'#DB4437'}}></i> Google Pay</div><input type="radio" name="payment" defaultChecked /></div>
-            <div className="payment-option fade-in-element" style={{animationDelay: '0.3s'}}><div className="pay-left"><i className="fa-brands fa-apple"></i> Apple Pay</div><input type="radio" name="payment" /></div>
+            <div className="payment-option fade-in-element" style={{animationDelay: '0.1s'}}><div className="pay-left"><i className="fa-brands fa-paypal" style={{color:'#003087'}}></i> {t('timer_method_paypal')}</div><input type="radio" name="payment" /></div>
+            <div className="payment-option fade-in-element" style={{animationDelay: '0.2s'}}><div className="pay-left"><i className="fa-brands fa-google" style={{color:'#DB4437'}}></i> {t('timer_method_google')}</div><input type="radio" name="payment" defaultChecked /></div>
+            <div className="payment-option fade-in-element" style={{animationDelay: '0.3s'}}><div className="pay-left"><i className="fa-brands fa-apple"></i> {t('timer_method_apple')}</div><input type="radio" name="payment" /></div>
         </div>
     );
 
@@ -880,28 +887,28 @@ const renderProfileContent = () => {
             {header}
             <div className="legal-content">
                 <div className="legal-item">
-                    <h4>Conditions d'utilisation</h4>
-                    <p>En utilisant ParkSmart, vous acceptez nos conditions d'utilisation et notre politique de confidentialité. Nous nous réservons le droit de modifier ces conditions à tout moment.</p>
+                    <h4>{t('faq_q1')}</h4>
+                    <p>{t('faq_a1')}</p>
                 </div>
 
                 <div className="legal-item">
-                    <h4>Responsabilité</h4>
-                    <p>ParkSmart ne peut être tenu responsable des dommages directs ou indirects résultant de l'utilisation ou de l'impossibilité d'utiliser le service. Chaque utilisateur est responsable de la sécurité de son véhicule.</p>
+                    <h4>{t('faq_q3')}</h4>
+                    <p>{t('faq_a3')}</p>
                 </div>
 
                 <div className="legal-item">
-                    <h4>Propriété Intellectuelle</h4>
-                    <p>Tout le contenu de ParkSmart, y compris les logos, textes et images, est protégé par les lois sur la propriété intellectuelle. Vous ne pouvez pas reproduire, distribuer ou transmettre ce contenu sans autorisation préalable.</p>
+                    <h4>{t('footer_privacy')}</h4>
+                    <p>{t('faq_a5')}</p>
                 </div>
 
                 <div className="legal-item">
-                    <h4>Confidentialité</h4>
-                    <p>Nous collectons et traitons vos données personnelles conformément à la réglementation en vigueur. Vos données ne seront jamais partagées avec des tiers sans consentement.</p>
+                    <h4>{t('about_title')}</h4>
+                    <p>{t('about_p1')}</p>
                 </div>
 
                 <div className="legal-item">
-                    <h4>Limitation de Responsabilité</h4>
-                    <p>ParkSmart s'efforce de fournir un service fiable, mais ne garantit pas l'absence d'erreurs ou d'interruptions. L'utilisation du service se fait à vos risques et périls.</p>
+                    <h4>{t('solutions_title')}</h4>
+                    <p>{t('solutions_desc')}</p>
                 </div>
             </div>
         </div>
@@ -918,11 +925,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 1 ? null : 1)}
                     >
                         <div className="faq-question">
-                            <span>Comment réserver une place ?</span>
+                            <span>{t('faq_q2')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 1 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Ouvrez l'application, consultez la carte, sélectionnez un parking et choisissez une place disponible. Confirmez votre réservation et procédez au paiement pour valider votre stationnement.</p>
+                            <p>{t('faq_a2')}</p>
                         </div>
                     </div>
 
@@ -931,11 +938,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 2 ? null : 2)}
                     >
                         <div className="faq-question">
-                            <span>Problèmes de paiement</span>
+                            <span>{t('faq_q3')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 2 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Si vous rencontrez des problèmes de paiement, vérifiez votre connexion Internet et assurez-vous que votre méthode de paiement est valide. Contactez notre support en cas de besoin.</p>
+                            <p>{t('faq_a3')}</p>
                         </div>
                     </div>
 
@@ -944,11 +951,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 3 ? null : 3)}
                     >
                         <div className="faq-question">
-                            <span>Annulation de réservation</span>
+                            <span>{t('faq_q4')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 3 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Vous pouvez annuler votre réservation depuis la page "Historique". Les remboursements sont traités selon notre politique de remboursement.</p>
+                            <p>{t('faq_a4')}</p>
                         </div>
                     </div>
 
@@ -957,11 +964,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 4 ? null : 4)}
                     >
                         <div className="faq-question">
-                            <span>Modification des informations</span>
+                            <span>{t('profile_title_details')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 4 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Accédez à votre profil détaillé en cliquant sur votre avatar et mettez à jour vos informations personnelles ou votre photo de profil selon vos besoins.</p>
+                            <p>{t('about_p2')}</p>
                         </div>
                     </div>
 
@@ -970,11 +977,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 5 ? null : 5)}
                     >
                         <div className="faq-question">
-                            <span>Besoin d'aide ?</span>
+                            <span>{t('faq_q5')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 5 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Notre équipe support est disponible 24/7. Contactez-nous à travers l'application ou consultez notre site web pour d'autres options de support.</p>
+                            <p>{t('faq_a5')}</p>
                         </div>
                     </div>
 
@@ -983,11 +990,11 @@ const renderProfileContent = () => {
                         onClick={() => setExpandedFAQ(expandedFAQ === 6 ? null : 6)}
                     >
                         <div className="faq-question">
-                            <span>Questions fréquentes</span>
+                            <span>{t('faq_subtitle')}</span>
                             <i className={`fa-solid fa-chevron-down ${expandedFAQ === 6 ? 'rotated' : ''}`}></i>
                         </div>
                         <div className="faq-answer">
-                            <p>Visitez notre section FAQ pour trouver des réponses aux questions les plus courantes. Si vous ne trouvez pas votre réponse, n'hésitez pas à nous contacter.</p>
+                            <p>{t('faq_still_desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -1003,60 +1010,55 @@ const renderProfileContent = () => {
                 <div className="about-hero-section">
                     <div className="about-icon"><i className="fa-solid fa-square-parking"></i></div>
                     <h2 className="about-hero-title">ParkSmart</h2>
-                    <p className="about-hero-subtitle">La solution intelligente de stationnement</p>
+                    <p className="about-hero-subtitle">{t('hero_desc')}</p>
                 </div>
 
                 <div className="about-content">
                     <div className="about-section about-section-fade-in">
-                        <h3 className="about-section-title">Qui Sommes-Nous ?</h3>
+                        <h3 className="about-section-title">{t('about_subtitle')}</h3>
                         <p className="about-section-text">
-                            ParkSmart est une application révolutionnaire dédiée à simplifier votre expérience de stationnement. 
-                            Nous combinons la technologie moderne avec une interface intuitive pour vous offrir le meilleur service.
+                            {t('about_p1')}
                         </p>
                     </div>
 
                     <div className="about-section about-section-fade-in">
-                        <h3 className="about-section-title">Notre Mission</h3>
+                        <h3 className="about-section-title">{t('solutions_title')}</h3>
                         <p className="about-section-text">
-                            Rendre le stationnement facile, rapide et accessible pour tous. Nous nous engageons à réduire le temps 
-                            passé à chercher une place de parking en offrant une solution digitale complète et efficace.
+                            {t('solutions_desc')}
                         </p>
                     </div>
 
                     <div className="about-section about-section-fade-in">
-                        <h3 className="about-section-title">Nos Fonctionnalités</h3>
+                        <h3 className="about-section-title">{t('solutions_subtitle')}</h3>
                         <ul className="about-features-list">
-                            <li><i className="fa-solid fa-map"></i> Localisation en temps réel des parkings</li>
-                            <li><i className="fa-solid fa-hand-holding-dollar"></i> Système de réservation intégré</li>
-                            <li><i className="fa-solid fa-clock"></i> Gestion simple du temps de stationnement</li>
-                            <li><i className="fa-solid fa-lock"></i> Paiement sécurisé</li>
-                            <li><i className="fa-solid fa-history"></i> Historique de vos réservations</li>
-                            <li><i className="fa-solid fa-bell"></i> Notifications en temps réel</li>
+                            <li><i className="fa-solid fa-map"></i> {t('sol_visual')}</li>
+                            <li><i className="fa-solid fa-hand-holding-dollar"></i> {t('sol_cloud')}</li>
+                            <li><i className="fa-solid fa-clock"></i> {t('sol_mobile')}</li>
+                            <li><i className="fa-solid fa-lock"></i> {t('sol_dashboard')}</li>
+                            <li><i className="fa-solid fa-history"></i> {t('history_title')}</li>
+                            <li><i className="fa-solid fa-bell"></i> {t('notif_title')}</li>
                         </ul>
                     </div>
 
                     <div className="about-section about-section-fade-in">
-                        <h3 className="about-section-title">Pourquoi Choisir ParkSmart ?</h3>
+                        <h3 className="about-section-title">{t('faq_q1')}</h3>
                         <p className="about-section-text">
-                            Avec ParkSmart, vous bénéficiez d'une expérience utilisateur optimale, d'une sécurité garantie 
-                            et d'un support client réactif. Notre plateforme est conçue pour répondre à vos besoins spécifiques 
-                            en matière de stationnement.
+                           {t('faq_a1')}
                         </p>
                     </div>
 
                     <div className="about-section about-section-fade-in">
-                        <h3 className="about-section-title">Contact & Support</h3>
+                        <h3 className="about-section-title">{t('footer_contact')}</h3>
                         <p className="about-section-text">
-                            Avez-vous des questions ou besoin d'assistance ? Consultez notre section "Aide & Support" 
-                            ou contactez notre équipe directement. Nous sommes là pour vous aider.
+                            {t('faq_still_desc')}
                         </p>
                     </div>
                 </div>
 
                 <div className="about-stats">
                     <div className="stat-item">
-                        <div className="stat-number">1000+</div>
-                        <div className="stat-label">Utilisateurs</div>
+                        <div className="stat-number">1k+</div>
+                        <div className="stat-label">{t('signup_role_driver')}s</div>
                     </div>
                     <div className="stat-item">
                         <div className="stat-number">50+</div>
@@ -1064,7 +1066,7 @@ const renderProfileContent = () => {
                     </div>
                     <div className="stat-item">
                         <div className="stat-number">24/7</div>
-                        <div className="stat-label">Support</div>
+                        <div className="stat-label">{t('profile_title_help')}</div>
                     </div>
                 </div>
             </div>
@@ -1091,38 +1093,38 @@ const renderProfileContent = () => {
                 
                 <div className="profile-info-grid">
                     <div className="profile-info-item">
-                        <span className="profile-info-label">Prénom</span>
-                        <span className="profile-info-value">{userData.prenom || 'Non défini'}</span>
+                        <span className="profile-info-label">{t('profile_edit_firstname')}</span>
+                        <span className="profile-info-value">{userData.prenom || t('error_generic')}</span>
                     </div>
                     <div className="profile-info-item">
-                        <span className="profile-info-label">Nom</span>
-                        <span className="profile-info-value">{userData.nom || 'Non défini'}</span>
+                        <span className="profile-info-label">{t('profile_edit_lastname')}</span>
+                        <span className="profile-info-value">{userData.nom || t('error_generic')}</span>
                     </div>
                     <div className="profile-info-item">
-                        <span className="profile-info-label">Email</span>
-                        <span className="profile-info-value">{userData.email || 'Non défini'}</span>
+                        <span className="profile-info-label">{t('profile_edit_email')}</span>
+                        <span className="profile-info-value">{userData.email || t('error_generic')}</span>
                     </div>
                     <div className="profile-info-item">
-                        <span className="profile-info-label">Membre depuis</span>
+                        <span className="profile-info-label">{t('profile_detail_member_since')}</span>
                         <span className="profile-info-value">2024</span>
                     </div>
                 </div>
 
                 <div className="profile-stats-section">
-                    <h4 className="profile-stats-title">Mon Activité</h4>
+                    <h4 className="profile-stats-title">{t('profile_detail_my_activity')}</h4>
                     <div className="profile-stats-grid">
                         <div className="profile-stat-box">
                             <div className="profile-stat-icon"><i className="fa-solid fa-car"></i></div>
                             <div className="profile-stat-content">
                                 <span className="profile-stat-number">5</span>
-                                <span className="profile-stat-text">Réservations</span>
+                                <span className="profile-stat-text">{t('profile_detail_reservations')}</span>
                             </div>
                         </div>
                         <div className="profile-stat-box">
                             <div className="profile-stat-icon"><i className="fa-solid fa-clock"></i></div>
                             <div className="profile-stat-content">
                                 <span className="profile-stat-number">12h</span>
-                                <span className="profile-stat-text">Temps Total</span>
+                                <span className="profile-stat-text">{t('profile_detail_total_time')}</span>
                             </div>
                         </div>
                     </div>
@@ -1175,7 +1177,7 @@ const renderProfileContent = () => {
               <i className="fa-solid fa-magnifying-glass" style={{color: '#94a3b8'}}></i>
                <input 
                 type="text" 
-                placeholder="Rechercher un parking..." 
+                placeholder={t('home_search_placeholder')} 
                 className="search-input"
                 value={searchQuery}                               
                 onChange={(e) => setSearchQuery(e.target.value)}  
@@ -1341,13 +1343,13 @@ const renderProfileContent = () => {
               <div className="grid-overlay">
                   <div className="grid-header">
                       <button className="btn-back" onClick={() => setShowGrid(false)}>←</button>
-                      <span className="grid-title">Choisir une place</span>
+                      <span className="grid-title">{t('grid_choose_spot')}</span>
                   </div>
                   <div className="floors-tabs"><strong>Plan du Parking</strong></div>
                   <div className="parking-layout">{renderGridRows()}</div>
                   <div className="grid-footer">
                       <button className="btn-continue" onClick={handleStartReservation} disabled={!chosenSpot}>
-                          Réserver {chosenSpot ? `(Place #${chosenSpot})` : ''}
+                          {chosenSpot ? t('grid_book_button_spot', {spot: chosenSpot}) : t('grid_book_button')}
                       </button>
                   </div>
               </div>
@@ -1368,7 +1370,7 @@ const renderProfileContent = () => {
 
       {!showGrid && !showLogoutModal && !historyDetailView && (
           <div className="bottom-nav-bar">
-            <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}><i className="fa-solid fa-house"></i><span>Accueil</span></div>
+            <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}><i className="fa-solid fa-house"></i><span>{t('nav_home')}</span></div>
             <div className={`nav-item ${activeTab === 'notif' ? 'active' : ''}`} onClick={() => setActiveTab('notif')}>
               <div style={{position: 'relative', display: 'inline-block'}}>
                 <i className="fa-solid fa-bell"></i>
@@ -1378,10 +1380,10 @@ const renderProfileContent = () => {
                   </div>
                 )}
               </div>
-              <span>Notifs</span>
+              <span>{t('nav_notifications', {count: unreadNotifications})}</span>
             </div>
-            <div className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}><i className="fa-solid fa-clock-rotate-left"></i><span>Historique</span></div>
-            <div className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}><i className="fa-solid fa-user"></i><span>Profil</span></div>
+            <div className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}><i className="fa-solid fa-clock-rotate-left"></i><span>{t('history_title')}</span></div>
+            <div className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}><i className="fa-solid fa-user"></i><span>{t('profile_title')}</span></div>
           </div>
       )}
     </div>
