@@ -788,15 +788,15 @@ a { text-decoration: none; color: inherit; }
 }
 /* 9. Section About Us (NOUVELLE SECTION) */
 .about-section {
-  padding: 40px 20px;
-  background-color: #ffffff; /* Fond blanc simple */
+  padding: 80px 20px; /* Plus d'espace vertical */
+  background-color: #f8fbf9; /* Fond vert très clair pour se démarquer */
 }
 
 .about-section .container {
   display: flex;
   align-items: center;
-  gap: 30px;
-  max-width: 1200px;
+  gap: 50px; /* Plus d'espace entre texte et vidéo */
+  max-width: 1300px; /* Conteneur élargi */
   margin: 0 auto;
 }
 
@@ -823,7 +823,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 .about-left h2 {
-  font-size: 2.8rem;
+  font-size: 3rem; /* Titre légèrement plus grand */
   line-height: 1.2;
   margin-bottom: 20px;
   color: #1e293b;
@@ -843,6 +843,8 @@ a { text-decoration: none; color: inherit; }
 
 .about-right {
   flex: 1; /* Prend l'autre moitié */
+  display: flex; /* Pour centrer la vidéo si elle est plus petite */
+  justify-content: center;
 }
 
 .about-right video {
