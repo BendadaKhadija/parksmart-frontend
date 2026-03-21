@@ -794,7 +794,7 @@ a { text-decoration: none; color: inherit; }
 }
 /* 9. Section About Us */
 .about-section {
-  padding: 80px 10px; /* Padding horizontal réduit */
+  padding: 80px 30px; /* Padding horizontal réduit */
   background-color: #f8fbf9; /* Fond vert très clair pour se démarquer */
 }
 
