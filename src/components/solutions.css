@@ -24,6 +24,7 @@
     color: #1e293b;
     margin: 0 0 15px 0;
     white-space: nowrap; /* Force une seule ligne */
+    font-weight: 800; /* Titre plus gras */
     overflow: hidden;
     text-overflow: ellipsis;
 }

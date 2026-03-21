@@ -351,8 +351,13 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* 6. Testimonials */
-.testimonials { padding: 80px 0; text-align: center; }
-.testimonials h2 { font-size: 2.5rem; margin-bottom: 50px;  color: #1e293b;}
+.testimonials { padding: 80px 20px; text-align: center; }
+.testimonials h2 {
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  color: #1e293b;
+  font-weight: 800; /* Titre plus gras */
+}
 .testimonials h2 .highlight { color: #98e0b2; }
 .testimonials-wrapper { width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
 .testimonials-slider { display: flex; width: max-content; animation: slide 30s linear infinite; }
@@ -649,6 +654,7 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 20px;
   line-height: 1.1;
   color: #1e293b;
+  font-weight: 800; /* Titre plus gras */
 }
 
 .faq-section .faq-content-left .sub-heading {
@@ -786,9 +792,9 @@ a { text-decoration: none; color: inherit; }
     margin-top: 30px;
   }
 }
-/* 9. Section About Us (NOUVELLE SECTION) */
+/* 9. Section About Us */
 .about-section {
-  padding: 80px 20px; /* Plus d'espace vertical */
+  padding: 80px 20px; /* Padding horizontal unifié */
   background-color: #f8fbf9; /* Fond vert très clair pour se démarquer */
 }
 
@@ -827,6 +833,7 @@ a { text-decoration: none; color: inherit; }
   line-height: 1.2;
   margin-bottom: 20px;
   color: #1e293b;
+  font-weight: 800; /* Titre plus gras */
 }
 .about-left h2 .highlight {
   color: #99eab7;
