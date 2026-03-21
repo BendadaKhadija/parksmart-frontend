@@ -794,7 +794,7 @@ a { text-decoration: none; color: inherit; }
 }
 /* 9. Section About Us */
 .about-section {
-  padding: 80px 20px; /* Padding horizontal unifié */
+  padding: 80px 10px; /* Padding horizontal réduit */
   background-color: #f8fbf9; /* Fond vert très clair pour se démarquer */
 }
 
@@ -864,7 +864,7 @@ a { text-decoration: none; color: inherit; }
 /* Responsive pour mobile */
 @media (max-width: 768px) {
   .about-section {
-    padding: 30px 15px;
+    padding: 30px 10px; /* Padding horizontal réduit aussi sur mobile */
   }
   .about-section .container {
     flex-direction: column; /* Passe en colonne */
