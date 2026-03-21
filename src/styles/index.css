@@ -18,7 +18,7 @@ body {
 /* 2. CONTENEUR ÉLARGI (LA CORRECTION EST ICI) */
 .container {
   width: 95%; /* Utilise 95% de l'écran */
-  max-width: 1300px; /* Élargi de 1200px à 1300px */
+  max-width: 1200px; /* Retour à la largeur standard pour l'alignement */
   margin: 0 auto;
 }
 
@@ -794,15 +794,15 @@ a { text-decoration: none; color: inherit; }
 }
 /* 9. Section About Us */
 .about-section {
-  padding: 80px 0px; /* Padding horizontal réduit */
+  padding: 80px 20px; /* Padding horizontal aligné avec les autres sections */
   background-color: #f8fbf9; /* Fond vert très clair pour se démarquer */
 }
 
 .about-section .container {
   display: flex;
   align-items: center;
-  gap: 50px; /* Plus d'espace entre texte et vidéo */
-  max-width: 1300px; /* Conteneur élargi */
+  gap: 40px; /* Aligné avec la section FAQ */
+  max-width: 1200px; /* Aligné avec les autres sections */
   margin: 0 auto;
 }
 
@@ -864,7 +864,7 @@ a { text-decoration: none; color: inherit; }
 /* Responsive pour mobile */
 @media (max-width: 768px) {
   .about-section {
-    padding: 30px 0px; /* Padding horizontal réduit aussi sur mobile */
+    padding: 30px 20px; /* Padding horizontal aligné */
   }
   .about-section .container {
     flex-direction: column; /* Passe en colonne */
