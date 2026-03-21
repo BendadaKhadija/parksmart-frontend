@@ -1370,7 +1370,7 @@ const renderProfileContent = () => {
 
       {!showGrid && !showLogoutModal && !historyDetailView && (
           <div className="bottom-nav-bar">
-            <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}><i className="fa-solid fa-house"></i><span>{t('nav_home')}</span></div>
+            <div className={`nav-item ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}><i className="fa-solid fa-house"></i><span>{t('nav_bottom_home')}</span></div>
             <div className={`nav-item ${activeTab === 'notif' ? 'active' : ''}`} onClick={() => setActiveTab('notif')}>
               <div style={{position: 'relative', display: 'inline-block'}}>
                 <i className="fa-solid fa-bell"></i>
@@ -1380,10 +1380,10 @@ const renderProfileContent = () => {
                   </div>
                 )}
               </div>
-              <span>{t('nav_notifications', {count: unreadNotifications})}</span>
+              <span>{t('nav_notifications')}</span>
             </div>
-            <div className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}><i className="fa-solid fa-clock-rotate-left"></i><span>{t('history_title')}</span></div>
-            <div className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}><i className="fa-solid fa-user"></i><span>{t('profile_title')}</span></div>
+            <div className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}><i className="fa-solid fa-clock-rotate-left"></i><span>{t('nav_bottom_history')}</span></div>
+            <div className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}><i className="fa-solid fa-user"></i><span>{t('nav_bottom_profile')}</span></div>
           </div>
       )}
     </div>

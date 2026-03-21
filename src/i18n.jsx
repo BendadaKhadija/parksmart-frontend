@@ -10,6 +10,10 @@ const translations = {
     nav_solutions: "Solutions",
     nav_signin: "Connexion",
     nav_signup: "Inscription",
+    nav_notifications: "Notifications",
+    nav_bottom_home: "Accueil",
+    nav_bottom_history: "Historique",
+    nav_bottom_profile: "Profil",
 
     // --- Hero ---
     hero_title1: "Transformez le stationnement",
@@ -204,6 +208,10 @@ const translations = {
     nav_solutions: "Solutions",
     nav_signin: "Sign In",
     nav_signup: "Sign Up",
+    nav_notifications: "Notifications",
+    nav_bottom_home: "Home",
+    nav_bottom_history: "History",
+    nav_bottom_profile: "Profile",
 
     // --- Hero ---
     hero_title1: "Transforming parking",
