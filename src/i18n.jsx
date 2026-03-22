@@ -150,6 +150,12 @@ const translations = {
     history_payment_methods: "Méthodes de Paiement",
     history_see_all: "Voir Tout",
 
+    // --- Statuts ---
+    status_en_attente: "En attente",
+    status_confirmee: "Confirmée",
+    status_terminee: "Terminée",
+    status_annulee: "Annulée",
+
     // --- ClientHome ---
     home_review: "Avis",
     home_reviews: "Avis",
@@ -362,6 +368,12 @@ const translations = {
     history_total: "Total",
     history_payment_methods: "Payment Methods",
     history_see_all: "See All",
+
+    // --- Statuses ---
+    status_en_attente: "Pending",
+    status_confirmee: "Confirmed",
+    status_terminee: "Finished",
+    status_annulee: "Cancelled",
 
     // --- ClientHome ---
     home_review: "Review",

@@ -17,7 +17,6 @@ html, body {
   width: 100%;
   /* overscroll-behavior: none;  <-- Desactive pour compatibilité Safari iOS < 16 */
   touch-action: pan-x pan-y;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #f8fafc;
 }
 
