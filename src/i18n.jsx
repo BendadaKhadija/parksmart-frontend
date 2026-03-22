@@ -125,6 +125,12 @@ const translations = {
     timer_processing: "TRAITEMENT...",
     timer_confirm: "CONFIRMER LE PAIEMENT",
     timer_3d_secure: "Vérification 3D Secure",
+    timer_method_paypal: "PayPal",
+    timer_method_google: "Google Pay",
+    timer_method_apple: "Apple Pay",
+    notif_title: "Notifications",
+    drivers_plural: "Conducteurs",
+    parkings_plural: "Parkings",
 
     // --- ClientHistory ---
     history_title: "Mon Historique de Parking",
@@ -159,6 +165,13 @@ const translations = {
     alert_booking_error: "Erreur lors de la réservation.",
     logout_confirm_title: "Voulez-vous vraiment vous déconnecter ?",
     logout_confirm_button: "Se déconnecter",
+    alert_geolocation_unsupported: "⚠️ Votre navigateur ne supporte pas la géolocalisation.",
+    alert_geolocation_permission: "📍 Pour voir votre position exacte, veuillez autoriser la localisation :\n\n1. Ouvrez les Paramètres de votre téléphone\n2. Activez la Localisation/GPS\n3. Dans votre navigateur, autorisez ce site à accéder à votre position\n4. Rechargez la page",
+    alert_gps_unavailable: "📍 GPS indisponible. Activez le GPS dans les paramètres de votre téléphone puis rechargez la page.",
+    alert_gps_timeout: "📍 Le GPS met trop de temps à répondre. Vérifiez que votre GPS est activé et rechargez la page.",
+    confirm_stop_reservation: "Voulez-vous vraiment terminer et payer ?",
+    alert_payment_validated: "✅ Paiement validé !\nMontant : {amount} DH",
+    alert_payment_error: "❌ Erreur lors du paiement.",
     cancel: "Annuler",
 
     // --- Profile Page ---
@@ -189,6 +202,7 @@ const translations = {
     alert_pass_mismatch: "Les mots de passe ne correspondent pas !",
     alert_pass_updated: "Mot de passe modifié avec succès !",
     alert_pass_update_error: "Erreur lors de la modification du mot de passe.",
+    alert_network_error: "Erreur réseau ou serveur.",
     profile_detail_member_since: "Membre depuis",
     profile_detail_my_activity: "Mon Activité",
     profile_detail_reservations: "Réservations",
@@ -198,6 +212,7 @@ const translations = {
 
     // --- Language ---
     lang_switch: "EN",
+    profile_language: "Langue",
   },
   en: {
     // --- Navbar ---
@@ -323,6 +338,12 @@ const translations = {
     timer_processing: "PROCESSING...",
     timer_confirm: "CONFIRM PAYMENT",
     timer_3d_secure: "3D Secure Verification",
+    timer_method_paypal: "PayPal",
+    timer_method_google: "Google Pay",
+    timer_method_apple: "Apple Pay",
+    notif_title: "Notifications",
+    drivers_plural: "Drivers",
+    parkings_plural: "Parkings",
 
     // --- ClientHistory ---
     history_title: "My Parking History",
@@ -357,6 +378,13 @@ const translations = {
     alert_booking_error: "Error during reservation.",
     logout_confirm_title: "Do you really want to log out?",
     logout_confirm_button: "Log Out",
+    alert_geolocation_unsupported: "⚠️ Your browser does not support geolocation.",
+    alert_geolocation_permission: "📍 To see your exact position, please allow location access:\n\n1. Open your phone's Settings\n2. Enable Location/GPS\n3. In your browser, allow this site to access your location\n4. Reload the page",
+    alert_gps_unavailable: "📍 GPS unavailable. Please enable GPS in your phone settings and reload the page.",
+    alert_gps_timeout: "📍 GPS is taking too long to respond. Check that your GPS is enabled and reload the page.",
+    confirm_stop_reservation: "Do you really want to end and pay?",
+    alert_payment_validated: "✅ Payment validated!\nAmount: {amount} DH",
+    alert_payment_error: "❌ Error during payment.",
     cancel: "Cancel",
 
     // --- Profile Page ---
@@ -387,6 +415,7 @@ const translations = {
     alert_pass_mismatch: "Passwords do not match!",
     alert_pass_updated: "Password changed successfully!",
     alert_pass_update_error: "Error changing password.",
+    alert_network_error: "Network or server error.",
     profile_detail_member_since: "Member since",
     profile_detail_my_activity: "My Activity",
     profile_detail_reservations: "Reservations",
@@ -396,6 +425,7 @@ const translations = {
 
     // --- Language ---
     lang_switch: "FR",
+    profile_language: "Language",
   }
 };
 

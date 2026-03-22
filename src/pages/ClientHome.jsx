@@ -216,7 +216,7 @@ const [imagePreview, setImagePreview] = useState(null);
     let watchId = null;
 
     if (!navigator.geolocation) {
-      alert("⚠️ Votre navigateur ne supporte pas la géolocalisation.");
+      alert(t('alert_geolocation_unsupported'));
       setUserPosition([34.020882, -6.841650]);
     } else {
         // Demander la permission et obtenir la position exacte
@@ -230,11 +230,11 @@ const [imagePreview, setImagePreview] = useState(null);
           (err) => {
             console.warn(`⚠️ GPS rapide échoué (code ${err.code}), position par défaut.`);
             if (err.code === 1) {
-                alert("📍 Pour voir votre position exacte, veuillez autoriser la localisation :\n\n1. Ouvrez les Paramètres de votre téléphone\n2. Activez la Localisation/GPS\n3. Dans votre navigateur, autorisez ce site à accéder à votre position\n4. Rechargez la page");
+                alert(t('alert_geolocation_permission'));
             } else if (err.code === 2) {
-                alert("📍 GPS indisponible. Activez le GPS dans les paramètres de votre téléphone puis rechargez la page.");
+                alert(t('alert_gps_unavailable'));
             } else if (err.code === 3) {
-                alert("📍 Le GPS met trop de temps à répondre. Vérifiez que votre GPS est activé et rechargez la page.");
+                alert(t('alert_gps_timeout'));
             }
             setUserPosition([34.020882, -6.841650]);
           },
@@ -420,7 +420,7 @@ useEffect(() => {
 
       } catch (error) {
           console.error("Erreur API Réservation :", error.response || error);
-          const msg = error.response?.data?.message || "Erreur réseau ou serveur.";
+          const msg = error.response?.data?.message || t('alert_network_error');
           alert(`❌ ${msg}`);
       }
   };
@@ -429,7 +429,7 @@ useEffect(() => {
       if (!currentReservation) return;
       const token = sessionStorage.getItem('token');
 
-      if(!window.confirm("Voulez-vous vraiment terminer et payer ?")) return;
+      if(!window.confirm(t('confirm_stop_reservation'))) return;
 
       try {
           const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/reservation/stop`, {
@@ -438,7 +438,7 @@ useEffect(() => {
               headers: { Authorization: `Bearer ${token}` }
           });
 
-          alert(`✅ Paiement validé !\nMontant : ${res.data.montant} DH`);
+          alert(t('alert_payment_validated', { amount: res.data.montant }));
 
           // RESET
           setOccupiedSpots(occupiedSpots.filter(id => id !== currentReservation.id_place));
@@ -447,7 +447,7 @@ useEffect(() => {
 
       } catch (error) {
           console.error(error);
-          alert("❌ Erreur lors du paiement.");
+          alert(t('alert_payment_error'));
       }
   };
 // 2. AJOUTE LA GESTION DE L'IMAGE
@@ -776,7 +776,7 @@ const renderProfileContent = () => {
                     {/* --- AJOUT DU BOUTON POUR CHANGER DE LANGUE --- */}
                     <div className="menu-item">
                         <div className="icon-box"><i className="fa-solid fa-globe"></i></div>
-                        <span className="menu-label">{t('lang') === 'fr' ? 'Langue' : 'Language'}</span>
+                        <span className="menu-label">{t('profile_language')}</span>
                         <LanguageSwitcher />
                     </div>
 
@@ -792,7 +792,7 @@ const renderProfileContent = () => {
                     </div>
                     <div className="menu-item" onClick={() => setProfilePage('help')}>
                         <div className="icon-box"><i className="fa-solid fa-circle-question"></i></div>
-                        <span className="menu-label">Aide & Support</span><i className="fa-solid fa-chevron-right arrow"></i>
+                        <span className="menu-label">{t('profile_title_help')}</span><i className="fa-solid fa-chevron-right arrow"></i>
                     </div>
                 </div>
                 
@@ -1058,11 +1058,11 @@ const renderProfileContent = () => {
                 <div className="about-stats">
                     <div className="stat-item">
                         <div className="stat-number">1k+</div>
-                        <div className="stat-label">{t('signup_role_driver')}s</div>
+                        <div className="stat-label">{t('drivers_plural')}</div>
                     </div>
                     <div className="stat-item">
                         <div className="stat-number">50+</div>
-                        <div className="stat-label">Parkings</div>
+                        <div className="stat-label">{t('parkings_plural')}</div>
                     </div>
                     <div className="stat-item">
                         <div className="stat-number">24/7</div>
@@ -1142,10 +1142,10 @@ const renderProfileContent = () => {
       {showLogoutModal && (
           <div className="logout-modal-overlay">
               <div className="logout-modal-content">
-                  <h3>Voulez-vous vraiment vous déconnecter ?</h3>
+                  <h3>{t('logout_confirm_title')}</h3>
                   <div className="logout-actions">
-                      <button className="btn-cancel-logout" onClick={() => setShowLogoutModal(false)}>Annuler</button>
-                      <button className="btn-confirm-logout" onClick={performLogout}>Se déconnecter</button>
+                      <button className="btn-cancel-logout" onClick={() => setShowLogoutModal(false)}>{t('cancel')}</button>
+                      <button className="btn-confirm-logout" onClick={performLogout}>{t('logout_confirm_button')}</button>
                   </div>
               </div>
           </div>
@@ -1345,7 +1345,7 @@ const renderProfileContent = () => {
                       <button className="btn-back" onClick={() => setShowGrid(false)}>←</button>
                       <span className="grid-title">{t('grid_choose_spot')}</span>
                   </div>
-                  <div className="floors-tabs"><strong>Plan du Parking</strong></div>
+                  <div className="floors-tabs"><strong>{t('grid_parking_plan')}</strong></div>
                   <div className="parking-layout">{renderGridRows()}</div>
                   <div className="grid-footer">
                       <button className="btn-continue" onClick={handleStartReservation} disabled={!chosenSpot}>
