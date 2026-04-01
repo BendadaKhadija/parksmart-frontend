@@ -645,6 +645,7 @@ Au terme de ce projet de fin d'études, nous pouvons dresser un bilan positif de
 - ✅ Une carte interactive avec géolocalisation
 - ✅ Un tableau de bord avec statistiques et graphiques
 - ✅ Des notifications push pour informer les utilisateurs
+- ✅ Une fonctionnalité d'itinéraire vers les parkings via Google Maps
 - ✅ Un système de paiement intégré
 - ✅ Un déploiement en production (Vercel + Railway)
 

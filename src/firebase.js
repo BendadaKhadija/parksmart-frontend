@@ -1,7 +1,8 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth"; 
-import { getMessaging, getToken, isSupported, onMessage } from "firebase/messaging"; // 👈 On importe 'isSupported' et 'onMessage'
+import { getMessaging, getToken, isSupported, onMessage } from "firebase/messaging";
+import axios from 'axios'; // Pour communiquer avec notre backend
 
 // 🔒 Sécurité : Les clés de configuration ne doivent jamais être en clair dans le code.
 // Utilisez des variables d'environnement comme décrit dans votre rapport.
@@ -62,4 +63,37 @@ export const onMessageListener = (callback) => {
   return onMessage(messaging, (payload) => {
     callback(payload);
   });
+};
+
+// Fonction à appeler après une connexion réussie pour configurer les notifications.
+export const setupNotificationsAfterLogin = async (userId, authToken) => {
+  // 1. Demander la permission et obtenir le token FCM
+  const fcmToken = await requestFirebaseToken();
+
+  // 2. Si un token est obtenu, l'envoyer au backend
+  if (fcmToken && userId && authToken) {
+    console.log(`Envoi du token FCM au serveur pour l'utilisateur ${userId}...`);
+    try {
+      // On utilise l'endpoint de mise à jour du profil.
+      // Comme il gère les fichiers (photo), on doit utiliser FormData.
+      const formData = new FormData();
+      // L'API /api/user/update attend l'ID de l'utilisateur pour savoir qui mettre à jour.
+      formData.append('userId', userId); 
+      formData.append('fcm_token', fcmToken);
+
+      // L'URL de l'API doit être dans une variable d'environnement
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+      await axios.post(`${apiUrl}/api/user/update`, formData, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          // Pour FormData, axios définit le 'Content-Type' automatiquement
+        },
+      });
+
+      console.log('✅ Token FCM enregistré avec succès sur le serveur.');
+    } catch (error) {
+      console.error("🚨 Erreur lors de l'envoi du token FCM au serveur:", error);
+    }
+  }
 };

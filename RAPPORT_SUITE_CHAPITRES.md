@@ -44,7 +44,7 @@ Chaque outil a été choisi pour une raison précise. Voici un tableau récapitu
 
 3.1. Frontend : React.js avec Vite
 
-React.js est une bibliothèque JavaScript créée par Facebook (Meta). Elle permet de construire des interfaces utilisateur sous forme de composants réutilisables. Par exemple, notre barre de navigation (Navbar), notre carte interactive, et chaque page sont des composants indépendants qui peuvent être développés et testés séparément.
+React.js est une bibliothèque JavaScript créée par Facebook (Meta). Elle permet de construire des interfaces utilisateur sous forme de composants réutilisables. Elle est idéale pour créer des applications web monopages (**Single Page Application - SPA**), où le contenu est chargé dynamiquement sans avoir à recharger la page entière, offrant une expérience utilisateur fluide et rapide. Par exemple, notre barre de navigation (Navbar), notre carte interactive, et chaque page sont des composants indépendants.
 
 Nous avons utilisé Vite comme outil de build à la place de Create React App (CRA) pour sa rapidité : le temps de démarrage en développement est quasi instantané, ce qui nous a fait gagner beaucoup de temps. Voici la configuration de Vite que nous avons utilisée :
 
@@ -79,11 +79,11 @@ Les tuiles de la carte proviennent d'OpenStreetMap, une alternative gratuite et 
 
 Pour le tableau de bord du gestionnaire, nous avons utilisé Recharts, une bibliothèque de graphiques construite pour React. Elle nous a permis de créer des graphiques en barres montrant le nombre de réservations par jour de la semaine, de manière claire et visuelle.
 
-3.4.1. Indicateur circulaire : React Circular Progressbar
+3.5. Indicateur circulaire : React Circular Progressbar
 
 Pour le chronomètre de réservation du conducteur, nous avons utilisé React Circular Progressbar. Cette bibliothèque affiche un cercle animé qui se remplit en fonction du temps écoulé, donnant au conducteur une vision claire et immédiate de la durée de son stationnement.
 
-3.5. Notifications en temps réel : Firebase Cloud Messaging
+3.6. Notifications en temps réel : Firebase Cloud Messaging (FCM)
 
 Pour que les utilisateurs soient informés en temps réel (nouvelle réservation, confirmation de paiement), nous avons intégré Firebase Cloud Messaging (FCM). Le fonctionnement est simple :
 1. Quand l'utilisateur se connecte, l'application demande la permission d'envoyer des notifications.
@@ -91,13 +91,13 @@ Pour que les utilisateurs soient informés en temps réel (nouvelle réservation
 3. Le serveur backend utilise ce token pour envoyer des notifications ciblées.
 4. Même si l'application est fermée, un Service Worker en arrière-plan affiche les notifications.
 
-3.6. Authentification : Firebase Auth + JWT
+3.7. Authentification : Firebase Auth + JWT
 
 Nous avons mis en place un double système de sécurité :
 - Firebase Authentication : pour la connexion via Google (popup sécurisée gérée par Google).
 - JSON Web Token (JWT) : pour la connexion classique par email/mot de passe. Le serveur génère un token signé qui est envoyé à chaque requête pour prouver l'identité de l'utilisateur.
 
-3.7. Backend : Node.js + Express.js
+3.8. Backend : Node.js + Express.js
 
 Le serveur est construit avec Node.js et le framework Express.js. Il joue le rôle d'intermédiaire entre le Frontend (ce que voit l'utilisateur) et la Base de données (où sont stockées les informations). 
 
@@ -161,9 +161,9 @@ Voici la liste complète des routes API que nous avons développées :
 
 Au total, notre API comprend **22 routes** réparties sur 7 domaines fonctionnels.
 
-3.8. Base de données : MySQL
+3.9. Base de données : MySQL
 
-Nous avons choisi MySQL pour sa robustesse et sa gestion des relations entre les données. La base contient les tables suivantes :
+Nous avons choisi MySQL, un Système de Gestion de Base de Données (**SGBD**) relationnel, pour sa robustesse et sa gestion des relations entre les données. La base contient les tables suivantes :
 - **utilisateurs** : Stocke les informations des conducteurs et gestionnaires.
 - **parkings** : Contient les données de chaque parking (nom, adresse, coordonnées GPS, tarif, nombre de places).
 - **places** : Détaille chaque place de stationnement (numéro, état, parking associé).
@@ -172,7 +172,7 @@ Nous avons choisi MySQL pour sa robustesse et sa gestion des relations entre les
 - **notifications** : Messages envoyés aux utilisateurs.
 - **avis** : Notes et commentaires laissés par les conducteurs sur les parkings.
 
-3.9. Sécurité de l'application
+3.10. Sécurité de l'application
 
 La sécurité a été une priorité tout au long du développement :
 - **Mots de passe chiffrés** : Avec bcrypt.js, les mots de passe ne sont jamais stockés en clair dans la base de données.
@@ -183,14 +183,14 @@ La sécurité a été une priorité tout au long du développement :
 - **En-têtes de sécurité HTTP** : Configuration de X-Frame-Options (protection contre le clickjacking), X-Content-Type-Options (protection contre le sniffing MIME), Referrer-Policy et Permissions-Policy.
 - **Upload sécurisé** : Les photos de profil sont envoyées via FormData (multipart/form-data) et traitées côté serveur avec Multer.
 
-3.10. Temps réel et polling
+3.11. Temps réel et polling
 
 Pour offrir une expérience en temps réel sans WebSocket, nous avons implémenté un système de polling intelligent :
 - **Actualisation des places** : Toutes les 3 secondes, l'application interroge le serveur pour mettre à jour l'état des places de parking (libre/occupée).
 - **Chronomètre synchronisé** : Le temps écoulé est calculé à partir du serveur (`temps_ecoule_secondes`) pour éviter les décalages entre l'horloge du client et celle du serveur.
 - **Badge de notifications** : Le compteur de notifications non lues est actualisé régulièrement.
 
-3.11. Structure du projet
+3.12. Structure du projet
 
 Voici l'arborescence complète de notre application Frontend :
 
@@ -250,7 +250,11 @@ Au total, le projet Frontend comprend :
 - **5 fichiers de configuration**
 - **22 routes API** consommées
 
-3.12. Liste complète des dépendances
+3.13. Internationalisation (i18n)
+
+L'application a été conçue pour être multilingue. Grâce à un système de traduction basé sur le Contexte de React (`i18n.jsx`), tous les textes de l'interface sont disponibles en **Français** et en **Anglais**. Un bouton dans le profil utilisateur permet de basculer instantanément d'une langue à l'autre, offrant une expérience utilisateur adaptée à un public international.
+
+3.14. Liste complète des dépendances
 
 Voici toutes les bibliothèques utilisées dans le projet :
 
@@ -323,7 +327,8 @@ C'est le cœur de l'application pour le conducteur. Il se compose de plusieurs o
 - Les parkings à proximité apparaissent sous forme de marqueurs animés (avec effet de pulsation) affichant leur prix en DH.
 - La carte supporte la rotation par geste à deux doigts sur mobile, et les icônes se contre-tournent pour rester lisibles.
 - En cliquant sur un parking, un panneau glissant affiche les détails (nom, adresse, prix horaire, note moyenne des avis).
-- Un bouton "Voir les places" ouvre une grille visuelle des places du parking, organisée par rangées et colonnes :
+- Un bouton d'itinéraire (icône de flèche) permet d'ouvrir Google Maps pour guider le conducteur directement vers le parking sélectionné.
+- Un bouton "Voir les places" ouvre ensuite une grille visuelle des places du parking, organisée par rangées et colonnes :
   - Vert = Place libre (cliquer pour réserver)
   - Rouge avec icône voiture = Place occupée
   - Bleu = Place sélectionnée par vous
@@ -368,6 +373,7 @@ Le paiement se fait en trois étapes :
 **f) Onglet Profil**
 - Affichage et modification des informations personnelles (nom, email, photo).
 - Changement de mot de passe.
+- **Changement de langue** : Un bouton permet de basculer entre le Français et l'Anglais.
 - Section des méthodes de paiement.
 - Conditions d'utilisation et aide.
 - Bouton de déconnexion.
@@ -510,6 +516,7 @@ Pour le conducteur, ParkSmart offre :
 - La visualisation de la disponibilité des places grâce à une grille visuelle intuitive.
 - Un système de réservation simple avec un chronomètre et un calcul automatique du coût.
 - Un processus de paiement sécurisé avec plusieurs méthodes disponibles.
+- Un guidage vers le parking sélectionné via Google Maps.
 - Un historique complet des réservations et un système de notifications en temps réel.
 
 Pour le gestionnaire, ParkSmart met à disposition :
@@ -542,18 +549,32 @@ Bien que ParkSmart soit fonctionnel et prêt à l'emploi, plusieurs axes d'amél
 - **Paiement réel** : Intégrer une passerelle de paiement réelle comme Stripe ou PayPal pour traiter de vrais paiements en ligne.
 - **Application mobile native** : Développer une version native avec React Native pour offrir une meilleure expérience sur smartphone (accès hors-ligne, notifications push plus fiables).
 - **Intelligence artificielle** : Utiliser le machine learning pour prédire les heures de forte affluence et suggérer les meilleurs créneaux de stationnement aux conducteurs.
-- **Système de navigation** : Guider le conducteur depuis sa position jusqu'à la place réservée grâce à un itinéraire GPS intégré.
 - **Multi-langues** : Ajouter le support de l'arabe et de l'anglais en plus du français pour toucher un public plus large.
 
 Ce projet a été une expérience très enrichissante qui nous a permis de mettre en pratique les connaissances acquises durant notre formation en Ingénierie Logicielle. Il nous a appris à gérer un projet de bout en bout, de l'analyse du besoin jusqu'au déploiement en production.
 
 
+# ANNEXES
 
+---
 
-BIBLIOGRAPHIE ET WEBOGRAPHIE
+## Annexe A : Glossaire
 
+| Terme | Définition |
+|-------|------------|
+| **API** | Application Programming Interface - Interface de programmation |
+| **REST** | Representational State Transfer - Architecture pour les API web |
+| **JWT** | JSON Web Token - Standard pour l'authentification |
+| **CRUD** | Create, Read, Update, Delete - Opérations de base sur les données |
+| **SPA** | Single Page Application - Application à page unique |
+| **FCM** | Firebase Cloud Messaging - Service de notifications push |
+| **SGBD** | Système de Gestion de Base de Données |
 
-Webographie :
+---
+
+## Annexe B : Bibliographie et Webographie
+
+### Webographie :
 
 [1] Documentation officielle de React.js – https://react.dev/
 [2] Documentation de Node.js – https://nodejs.org/docs/
@@ -569,12 +590,235 @@ Webographie :
 [12] JWT Introduction – https://jwt.io/introduction
 [13] OWASP Security Guidelines – https://owasp.org/
 
-
-Outils utilisés :
+### Outils utilisés :
 
 [14] Visual Studio Code – https://code.visualstudio.com/
 [15] GitHub – https://github.com/
 [16] Postman – https://www.postman.com/
 [17] MySQL Workbench – https://www.mysql.com/products/workbench/
 
+---
 
+## Annexe C : Diagrammes UML
+
+Dans cette annexe, nous présentons les diagrammes UML clés qui ont guidé la conception et le développement de ParkSmart. Ces diagrammes sont écrits en utilisant la syntaxe Mermaid, ce qui permet de les intégrer et de les versionner directement avec le code.
+
+### 1. Diagramme de Cas d'Utilisation
+
+Ce diagramme montre les interactions entre les acteurs (Conducteur, Gestionnaire) et les fonctionnalités principales du système.
+
+```mermaid
+graph TD
+    actor Conducteur
+    actor Gestionnaire
+ 
+    subgraph "Système ParkSmart"
+        UC1("S'authentifier")
+        UC2("Gérer son profil")
+        UC3("Consulter ses notifications")
+        
+        subgraph "Fonctionnalités Conducteur"
+            UC4("Chercher un parking")
+            UC5("Réserver une place")
+            UC6("Payer la réservation")
+            UC7("Consulter son historique")
+            UC8("Laisser un avis")
+        end
+ 
+        subgraph "Fonctionnalités Gestionnaire"
+            UC9("Gérer ses parkings (CRUD)")
+            UC10("Suivre les réservations")
+            UC11("Analyser les revenus")
+            UC12("Scanner un ticket")
+        end
+    end
+ 
+    Conducteur --> UC1
+    Conducteur --> UC2
+    Conducteur --> UC3
+    Conducteur --> UC4
+    Conducteur --> UC5
+    Conducteur --> UC7
+    UC5 -.->|include| UC6
+    UC7 -.->|extend| UC8
+ 
+    Gestionnaire --> UC1
+    Gestionnaire --> UC2
+    Gestionnaire --> UC3
+    Gestionnaire --> UC9
+    Gestionnaire --> UC10
+    Gestionnaire --> UC11
+    Gestionnaire --> UC12
+```
+
+### 2. Diagramme de Séquence : Réservation d'une place
+
+Ce diagramme détaille le processus de réservation d'une place par un conducteur, depuis la sélection sur la carte jusqu'à la confirmation.
+
+```mermaid
+sequenceDiagram
+    actor Conducteur
+    participant Frontend as "Interface (React)"
+    participant Backend as "Serveur (Node.js)"
+    participant BDD as "Base de Données (MySQL)"
+
+    Conducteur->>Frontend: Clique sur "Réserver" pour la place P-01
+    Frontend->>Backend: POST /api/reservations (id_place, id_conducteur)
+    
+    activate Backend
+    Backend->>BDD: Vérifier statut de la place P-01
+    BDD-->>Backend: Place est 'libre'
+    
+    Backend->>BDD: UPDATE place SET statut='reservee' WHERE id=P-01
+    BDD-->>Backend: OK
+    
+    Backend->>BDD: INSERT INTO reservation (id_place, id_conducteur, statut='en_attente')
+    BDD-->>Backend: OK, nouvelle réservation ID 123
+    
+    Backend-->>Frontend: { success: true, reservationId: 123 }
+    deactivate Backend
+    
+    activate Frontend
+    Frontend->>Conducteur: Affiche "Place réservée ! Le chronomètre démarre."
+    Frontend->>Backend: POST /api/reservation/start (reservationId: 123)
+    deactivate Frontend
+    
+    activate Backend
+    Backend->>BDD: UPDATE reservation SET date_debut=NOW() WHERE id=123
+    BDD-->>Backend: OK
+    deactivate Backend
+```
+
+### 4. Diagramme de Séquence : Paiement d'une réservation
+
+Ce diagramme illustre comment une réservation est finalisée et payée par le conducteur, ce qui met fin au chronomètre.
+
+```mermaid
+sequenceDiagram
+    actor C as Conducteur
+    participant F as "Frontend (React)"
+    participant B as "Backend (Express.js)"
+    participant DB as "BDD (MySQL)"
+
+    C->>F: Clique sur "Terminer et Payer"
+    F->>B: POST /api/reservation/stop (id_reservation)
+    activate B
+
+    B->>DB: SELECT * FROM reservations WHERE id = :id_reservation
+    DB-->>B: Données de la réservation (date_debut, id_place)
+
+    B->>DB: Récupérer le tarif_horaire du parking associé
+    DB-->>B: tarif_horaire
+
+    B->>B: Calcule le coût total (durée * tarif)
+    B->>DB: INSERT INTO paiements (id_reservation, montant, ...)
+    DB-->>B: OK, nouveau paiement ID 456
+
+    B->>DB: UPDATE reservations SET statut='terminee', date_fin=NOW() WHERE id = :id_reservation
+    DB-->>B: OK
+
+    B-->>F: { success: true, montant: 15.50 }
+    deactivate B
+
+    activate F
+    F->>C: Affiche "Paiement validé ! Montant : 15.50 DH"
+    F->>F: Réinitialise l'état (currentReservation = null)
+    deactivate F
+```
+
+### 3. Diagramme de Classes (Simplifié)
+
+Ce diagramme montre les principales entités du système et leurs relations, basé sur le schéma de la base de données.
+
+```mermaid
+classDiagram
+    direction LR
+    class Utilisateur {
+        +id_utilisateur
+        +nom
+        +prenom
+        +email
+        #password
+        +photo
+        +sAuthentifier()
+        +gererProfil()
+    }
+    <<Abstract>> Utilisateur
+
+    class Conducteur {
+        +fcm_token
+        +chercherParking()
+        +reserverPlace()
+        +consulterHistorique()
+        +laisserAvis()
+    }
+
+    class Gestionnaire {
+        +gererParking()
+        +suivreReservations()
+        +analyserRevenus()
+    }
+
+    class Parking {
+        +id_parking
+        +nom
+        +adresse
+        +latitude
+        +longitude
+        +tarif_horaire
+        +photo
+    }
+
+    class Place {
+        +id_place
+        +numero
+        +etage
+        +statut: ENUM
+    }
+
+    class Reservation {
+        +id_reservation
+        +date_debut
+        +date_fin
+        +statut: ENUM
+        +calculerCout()
+    }
+    
+    class Paiement {
+        +id_paiement
+        +montant
+        +date_paiement
+        +methode
+    }
+
+    class Avis {
+        +id_avis
+        +note: int
+        +commentaire
+        +date_avis
+    }
+
+    class Notification {
+        +id_notification
+        +titre
+        +message
+        +date_envoi
+        +lu: boolean
+    }
+
+    Utilisateur <|-- Conducteur
+    Utilisateur <|-- Gestionnaire
+
+    Gestionnaire "1" -- "0..*" Parking : gère
+    Parking "1" -- "1..*" Place : contient
+    
+    Conducteur "1" -- "0..*" Reservation : effectue
+    Place "1" -- "0..*" Reservation : concerne
+    
+    Reservation "1" -- "1" Paiement : génère
+    
+    Conducteur "1" -- "0..*" Avis : laisse
+    Parking "1" -- "0..*" Avis : est noté par
+    
+    Conducteur "1" -- "0..*" Notification : reçoit
+```
