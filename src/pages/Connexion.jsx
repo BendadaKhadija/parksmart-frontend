@@ -57,7 +57,7 @@ function Connexion() {
         setError("Impossible de contacter le serveur. Vérifiez votre connexion internet et l'URL de l'API.");
       }
     }
-  }; 
+  };
 
   // 👇 2. NOUVELLE FONCTION GOOGLE 👇
   const handleGoogleLogin = async () => {
