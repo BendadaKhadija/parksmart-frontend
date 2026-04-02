@@ -45,10 +45,18 @@ function Connexion() {
 
     } catch (err) {
       console.error("🔴 Erreur Login :", err);
-      if (err.response && err.response.data) {
-        setError(err.response.data.message);
+      if (err.response) {
+        // Si c'est une erreur 500, le backend a planté. C'est le problème le plus probable.
+        if (err.response.status === 500) {
+            setError("Erreur interne du serveur (500). Le backend a planté. Consultez les logs sur Railway.");
+        } else if (err.response.data && err.response.data.message) {
+            // Erreurs "propres" comme 401 (Unauthorized) ou 404 (Not Found)
+            setError(err.response.data.message);
+        } else {
+            setError(`Erreur inattendue du serveur (Code: ${err.response.status}).`);
+        }
       } else {
-        setError("Impossible de contacter le serveur.");
+        setError("Impossible de contacter le serveur. Vérifiez votre connexion internet et l'URL de l'API.");
       }
     }
   };
@@ -92,12 +100,16 @@ function Connexion() {
 
     } catch (err) {
       console.error("🔴 Erreur Google Login :", err);
-      if (err.response && err.response.status === 404) {
-          setError("Ce compte Google n'est pas encore inscrit sur ParkSmart. Veuillez créer un compte.");
-      } else if (err.response && err.response.data && err.response.data.message) {
-          setError(`Erreur Serveur: ${err.response.data.message}`);
+      if (err.response) {
+        if (err.response.status === 401) {
+            setError("Le serveur a refusé la connexion Google (401). Vérifiez les clés Firebase sur Railway.");
+        } else if (err.response.data && err.response.data.message) {
+            setError(`Erreur Serveur: ${err.response.data.message}`);
+        } else {
+            setError(`Erreur inattendue du serveur (Code: ${err.response.status}).`);
+        }
       } else {
-          setError("La connexion avec Google a échoué (Vérifiez que le serveur est allumé).");
+          setError("La connexion avec Google a échoué. Vérifiez votre connexion internet.");
       }
     }
   };
