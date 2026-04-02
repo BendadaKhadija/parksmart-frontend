@@ -403,6 +403,11 @@ En dessous, un graphique en barres montre le nombre de réservations par jour de
   - Voir sur la carte : Affiche la localisation du parking.
   - Voir les avis : Affiche les commentaires et notes des conducteurs.
 - Bouton "Ajouter un parking" pour créer un nouveau parking avec tous ses détails (nom, adresse, coordonnées GPS, tarif, image, nombre de rangées et de places).
+- Le gestionnaire dispose de toutes les opérations **CRUD** (**C**reate, **R**ead, **U**pdate, **D**elete) pour ses parkings :
+  - **Create** : Un bouton "Ajouter un parking" ouvre un formulaire pour créer un nouveau parking avec tous ses détails (nom, adresse, coordonnées GPS, tarif, image, nombre de rangées et de places).
+  - **Read** : Le gestionnaire peut consulter la liste de ses parkings, voir leur localisation sur la carte et lire les avis des conducteurs.
+  - **Update** : L'option "Modifier" permet de changer le nom, le prix, ou le nombre de places d'un parking.
+  - **Delete** : L'option "Supprimer" retire un parking de la liste, après une confirmation de sécurité.
 
 [Insérer capture d'écran de la liste des parkings]
 

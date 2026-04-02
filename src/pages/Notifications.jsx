@@ -128,9 +128,7 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
         });
 
         // Tri par date décroissante
-        let sortedNotifs = notificationsFiltrees.sort((a, b) => new Date(b.date_notif || b.date_creation) - new Date(a.date_notif || a.date_creation));
-
-        // Notifications réelles uniquement (provenant de la BDD)
+        const sortedNotifs = notificationsFiltrees.sort((a, b) => new Date(b.date_notif || b.date_creation) - new Date(a.date_notif || a.date_creation));
 
         setNotifications(sortedNotifs);
       } catch (error) {
