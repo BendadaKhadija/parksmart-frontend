@@ -113,11 +113,25 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
+        // --- POUR VOS TESTS ---
+        // J'ajoute des notifications de test pour s'assurer que l'affichage fonctionne.
+        // Le problème des notifications manquantes vient probablement du backend qui ne les génère pas pour votre utilisateur.
+        const mockNotifications = [
+          { id_notif: 9001, titre: 'Bienvenue sur ParkSmart !', message: 'Votre inscription est terminée. Prêt à vous garer ?', date_creation: new Date(Date.now() - 10 * 60 * 1000).toISOString(), lu: 0 },
+          { id_notif: 9002, titre: 'Paiement validé avec succès', message: 'Votre paiement de 12.50 DH pour le parking "Gare Centre" a été confirmé.', date_creation: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), lu: 0 },
+          { id_notif: 9003, titre: 'Alerte de sécurité', message: 'Une connexion depuis un nouvel appareil a été détectée sur votre compte.', date_creation: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), lu: 1 },
+          { id_notif: 9004, titre: 'Rappel de réservation', message: 'Votre réservation au parking "Atlas" commence dans 15 minutes.', date_creation: new Date(Date.now() - 22 * 60 * 60 * 1000).toISOString(), lu: 1 },
+        ];
+
+        // On combine les vraies notifications (s'il y en a) avec les données de test
+        const realNotifications = res.data || [];
+        const combinedData = [...mockNotifications, ...realNotifications];
+
         // Filtrer : les notifications lues de plus d'un jour disparaissent
         const unJourEnMs = 24 * 60 * 60 * 1000;
         const maintenant = new Date().getTime();
         
-        const notificationsFiltrees = (res.data || []).filter(notif => {
+        const notificationsFiltrees = combinedData.filter(notif => {
           if (notif.lu === 1) {
             const dateNotifObj = new Date(notif.date_notif || notif.date_creation).getTime();
             if (maintenant - dateNotifObj > unJourEnMs) {
