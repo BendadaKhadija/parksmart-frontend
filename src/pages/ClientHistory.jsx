@@ -25,7 +25,7 @@ const ClientHistory = ({ onDetailViewChange }) => {
         const token = sessionStorage.getItem('token');
         console.log("Token envoyé :", token); // Vérifions si le token existe !
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/reservations/history/${userId}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/reservations/history}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'

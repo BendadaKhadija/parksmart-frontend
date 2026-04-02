@@ -475,7 +475,7 @@ const handleUpdateUser = async () => {
             formData.append('image', imageFile); // Même nom que l'inscription et le manager
         }
         
-        const url = `${import.meta.env.VITE_API_URL}/api/user/update`;
+        const url = `${import.meta.env.VITE_API_URL}/api/profile`;
         
         const response = await axios.post(url, formData, {
             headers: {
@@ -550,8 +550,8 @@ const handleUpdateUser = async () => {
           formData.append('currentPassword', passwordData.current); 
 
           const token = sessionStorage.getItem('token');
-          // On tente d'utiliser la route de mise à jour globale qui existe (POST /api/user/update)
-          await axios.post(`${import.meta.env.VITE_API_URL}/api/user/update`, formData, { 
+          // On tente d'utiliser la route de mise à jour globale qui existe (POST /api/profile)
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/profile`, formData, { 
               headers: { 
                   Authorization: `Bearer ${token}`,
                   'Content-Type': 'multipart/form-data'
