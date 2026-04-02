@@ -46,11 +46,9 @@ function Connexion() {
     } catch (err) {
       console.error("🔴 Erreur Login :", err);
       if (err.response) {
-        // Si c'est une erreur 500, le backend a planté. C'est le problème le plus probable.
         if (err.response.status === 500) {
             setError("Erreur interne du serveur (500). Le backend a planté. Consultez les logs sur Railway.");
         } else if (err.response.data && err.response.data.message) {
-            // Erreurs "propres" comme 401 (Unauthorized) ou 404 (Not Found)
             setError(err.response.data.message);
         } else {
             setError(`Erreur inattendue du serveur (Code: ${err.response.status}).`);
@@ -59,7 +57,7 @@ function Connexion() {
         setError("Impossible de contacter le serveur. Vérifiez votre connexion internet et l'URL de l'API.");
       }
     }
-  };
+  }; 
 
   // 👇 2. NOUVELLE FONCTION GOOGLE 👇
   const handleGoogleLogin = async () => {
@@ -76,9 +74,13 @@ function Connexion() {
       const firebaseToken = await userGoogle.getIdToken();
 
       // On l'envoie à ton backend
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, { 
-        token: firebaseToken 
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/google`,
+        {}, // Le corps de la requête est vide
+        {
+          headers: { Authorization: `Bearer ${firebaseToken}` }
+        }
+      ); // 🚨 LA CORRECTION ÉTAIT ICI : on a remplacé }); par );
 
       // Le backend nous renvoie les infos de l'utilisateur comme pour une connexion normale
       let { token, user } = response.data;
@@ -102,7 +104,7 @@ function Connexion() {
       console.error("🔴 Erreur Google Login :", err);
       if (err.response) {
         if (err.response.status === 401) {
-            setError("Le serveur a refusé la connexion Google (401). Vérifiez les clés Firebase sur Railway.");
+            setError("Le serveur a refusé la connexion Google (401). Vérifiez les clés Firebase sur Railway et consultez les logs du backend.");
         } else if (err.response.data && err.response.data.message) {
             setError(`Erreur Serveur: ${err.response.data.message}`);
         } else {
@@ -113,14 +115,13 @@ function Connexion() {
       }
     }
   };
-return (
+
+  return (
     <div className="auth-container">
       <div className="auth-card">
         
-        {/* 1. On garde la div pour que la boîte reste à sa place et affiche l'image du CSS */}
         <div className="auth-image-side"></div>
 
-        {/* 2. Votre formulaire reste bien à droite */}
         <div className="auth-form-side">
           <h2>{t('login_welcome')}</h2>
           <p>{t('login_subtitle')}</p>
@@ -164,7 +165,6 @@ return (
 
           <div className="divider"><span>{t('login_or')}</span></div>
 
-          {/* 👇 3. TON BOUTON MIS À JOUR 👇 */}
           <button type="button" className="btn-google" onClick={handleGoogleLogin}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="google-icon" />
             {t('login_google')}
