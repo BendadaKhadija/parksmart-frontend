@@ -38,7 +38,7 @@ function Inscription() {
   e.preventDefault();
   setError('');
 
-  // 👇 CRÉATION DU FORM DATA (Le paquet spécial pour envoyer des fichiers)
+  // 👇 CRÉATION jjDU FORM DATA (Le paquet spécial pour envoyer des fichiers)
   const dataToSend = new FormData();
   dataToSend.append('nom', formData.nom);
   dataToSend.append('prenom', formData.prenom);
