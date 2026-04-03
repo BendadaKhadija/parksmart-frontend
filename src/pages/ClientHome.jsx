@@ -37,6 +37,7 @@ function ClientHome() {
   const [occupiedSpots, setOccupiedSpots] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [paymentDetails, setPaymentDetails] = useState(null);
  
   const [placesDuParking, setPlacesDuParking] = useState([]);
   // --- DATA USER ---
@@ -461,15 +462,22 @@ useEffect(() => {
             ? `${tempsHeures}h ${tempsMinutes % 60}m ${tempsSecondes}s`
             : `${tempsMinutes}m ${tempsSecondes}s`;
           
-          alert(
-            t('alert_payment_validated', { amount: montantBackend }) + 
-            `\n\n📊 Détail de facturation:\nTemps: ${affichageTemps}\nTarif: ${tarif} DH/h\nMinimum horaire: 1 heure\nHeures facturées: ${heuresFacturees}h\nMontant: ${heuresFacturees}h × ${tarif} DH/h = ${montantCalcule} DH`
-          );
+          // Afficher la modale de facturation
+          setPaymentDetails({
+            temps: affichageTemps,
+            tarif: tarif,
+            heuresFacturees: heuresFacturees,
+            montantCalcule: montantCalcule,
+            montantBackend: montantBackend,
+            parkingName: selectedParking?.nom || 'Parking'
+          });
 
-          // RESET
-          setOccupiedSpots(occupiedSpots.filter(id => id !== currentReservation.id_place));
-          setCurrentReservation(null);
-          setChosenSpot(null);
+          // RESET après un délai
+          setTimeout(() => {
+              setOccupiedSpots(occupiedSpots.filter(id => id !== currentReservation.id_place));
+              setCurrentReservation(null);
+              setChosenSpot(null);
+          }, 2000);
 
       } catch (error) {
           console.error(error);
@@ -1177,7 +1185,53 @@ const renderProfileContent = () => {
           </div>
       )}
 
-      <div className="main-content-area" style={showLogoutModal ? {filter: 'blur(5px)', pointerEvents: 'none'} : {}}>
+      {/* MODALE DÉTAILS DE PAIEMENT */}
+      {paymentDetails && (
+          <div className="payment-modal-overlay">
+              <div className="payment-modal-content">
+                  <div className="payment-modal-header">
+                      <h2>✅ Paiement Validé</h2>
+                  </div>
+                  
+                  <div className="payment-details">
+                      <div className="detail-row">
+                          <span className="label">Parking :</span>
+                          <span className="value">{paymentDetails.parkingName}</span>
+                      </div>
+                      <div className="detail-row">
+                          <span className="label">Temps stationnement :</span>
+                          <span className="value">{paymentDetails.temps}</span>
+                      </div>
+                      <div className="detail-row">
+                          <span className="label">Tarif horaire :</span>
+                          <span className="value">{paymentDetails.tarif} DH/h</span>
+                      </div>
+                      <div className="detail-row">
+                          <span className="label">Minimum facturé :</span>
+                          <span className="value">1 heure</span>
+                      </div>
+                      <hr style={{margin: '10px 0', borderColor: '#e0e0e0'}} />
+                      <div className="detail-row detail-row-bold">
+                          <span className="label">Heures facturées :</span>
+                          <span className="value">{paymentDetails.heuresFacturees}h</span>
+                      </div>
+                      <div className="detail-row detail-row-total">
+                          <span className="label">Montant :</span>
+                          <span className="value">{paymentDetails.montantBackend} DH</span>
+                      </div>
+                  </div>
+
+                  <button 
+                      className="payment-modal-close"
+                      onClick={() => setPaymentDetails(null)}
+                  >
+                      Fermer
+                  </button>
+              </div>
+          </div>
+      )}
+
+      <div className="main-content-area" style={(showLogoutModal || paymentDetails) ? {filter: 'blur(5px)', pointerEvents: 'none'} : {}}>
           
           {activeTab === 'home' && (
   <>
