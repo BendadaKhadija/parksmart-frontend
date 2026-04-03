@@ -108,8 +108,7 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
         // On essaie id_cond, sinon id, sinon id_utilisateur...
         const monId = user.id_cond || user.id || user.id_utilisateur; 
         
-        const urlApi = `${import.meta.env.VITE_API_URL}/api/notifications/${monId}`;
-        const res = await axios.get(urlApi, {
+          const urlApi = `${import.meta.env.VITE_API_URL}/api/notifications`;        const res = await axios.get(urlApi, {
           headers: { Authorization: `Bearer ${token}` }
         });
 

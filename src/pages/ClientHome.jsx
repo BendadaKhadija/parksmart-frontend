@@ -551,7 +551,7 @@ const handleUpdateUser = async () => {
 
           const token = sessionStorage.getItem('token');
           // On tente d'utiliser la route de mise à jour globale qui existe (POST /api/profile)
-          await axios.post(`${import.meta.env.VITE_API_URL}/api/profile`, formData, { 
+          await axios.put(`${import.meta.env.VITE_API_URL}/api/profile`, formData, { 
               headers: { 
                   Authorization: `Bearer ${token}`,
                   'Content-Type': 'multipart/form-data'
