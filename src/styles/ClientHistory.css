@@ -11,6 +11,14 @@
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #F9F9F9;
+    padding: 20px 0;
+    margin: -20px -20px 20px -20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 /* --- LISTE HISTORIQUE (CARDS) --- */
@@ -203,6 +211,14 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    padding: 20px 0;
+    margin: -20px -20px 20px -20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .back-arrow {
