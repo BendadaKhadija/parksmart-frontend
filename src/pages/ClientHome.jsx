@@ -438,7 +438,25 @@ useEffect(() => {
               headers: { Authorization: `Bearer ${token}` }
           });
 
-          alert(t('alert_payment_validated', { amount: res.data.montant }));
+          // Calculer le montant réel basé sur le temps écoulé et le tarif
+          const tempsEcouleHeures = (currentReservation.temps_ecoule_secondes || 0) / 3600;
+          const tarif = parseFloat(
+            selectedParking?.tarif_heure || 
+            selectedParking?.tarif_horaire ||
+            (currentReservation && parkings.find(p => p.id_park === currentReservation.id_park)?.tarif_heure) ||
+            10
+          );
+          
+          const montantCalcule = (tempsEcouleHeures * tarif).toFixed(2);
+          const montantBackend = res.data.montant || montantCalcule;
+          
+          const tempsMinutes = Math.floor((currentReservation.temps_ecoule_secondes || 0) / 60);
+          const tempsSecondes = (currentReservation.temps_ecoule_secondes || 0) % 60;
+          
+          alert(
+            t('alert_payment_validated', { amount: montantBackend }) + 
+            `\n\n📊 Détail:\nTemps: ${tempsMinutes}m ${tempsSecondes}s\nTarif: ${tarif} DH/h\nCalcul: (${tempsEcouleHeures.toFixed(4)}h × ${tarif}) = ${montantCalcule} DH`
+          );
 
           // RESET
           setOccupiedSpots(occupiedSpots.filter(id => id !== currentReservation.id_place));
