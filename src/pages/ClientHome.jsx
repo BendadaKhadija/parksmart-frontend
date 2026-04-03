@@ -449,7 +449,8 @@ useEffect(() => {
           );
           
           // Appliquer le minimum d'1 heure (comme le backend)
-          const heuresFacturees = Math.max(1, Math.ceil(tempsEcouleHeures * 4) / 4); // Arrondir à 0.25h (15 min)
+          // On prend le temps exact sans arrondir à l'heure supérieure
+          const heuresFacturees = tempsEcouleHeures; 
           const montantCalcule = (heuresFacturees * tarif).toFixed(2);
           const montantBackend = res.data.montant || montantCalcule;
           
@@ -463,8 +464,11 @@ useEffect(() => {
           
           alert(
             t('alert_payment_validated', { amount: montantBackend }) + 
-            `\n\n📊 Détail de facturation:\nTemps: ${affichageTemps}\nTarif: ${tarif} DH/h\nMinimum horaire: 1 heure\nHeures facturées: ${heuresFacturees}h\nMontant: ${heuresFacturees}h × ${tarif} DH/h = ${montantCalcule} DH`
-          );
+            `\n\n📊 Détail de facturation:\n` +
+            `Temps passé : ${affichageTemps}\n` +
+            `Tarif : ${tarif} DH/h\n` +
+            `Montant : ${montantCalcule} DH`
+            );
 
           // RESET
           setOccupiedSpots(occupiedSpots.filter(id => id !== currentReservation.id_place));
