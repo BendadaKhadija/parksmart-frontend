@@ -199,21 +199,22 @@ function DashboardManager() {
       
       const idGest = parsedUser.id_gest || parsedUser.id;
       if (idGest) {
-          fetchMyParkings(idGest);
-          fetchReservations(idGest);
-          fetchEarnings(idGest);
-      }
+        fetchMyParkings();
+        fetchReservations();
+        fetchEarnings();
+     }
     } else {
       setLoading(false); 
       navigate('/signin');
     }
   }, []);
-
-  // 1. PARKINGS
-  const fetchMyParkings = async (idGest) => {
+// 1. PARKINGS
+  const fetchMyParkings = async () => { // Plus besoin de idGest ici
     try {
       const token = sessionStorage.getItem('token');
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/my-parkings/${idGest}`, {
+      // ❌ AVANT : /api/my-parkings/${idGest}
+      // ✅ APRÈS : /api/my-parkings
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/my-parkings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMyParkings(res.data);
@@ -225,10 +226,12 @@ function DashboardManager() {
   };
 
   // 2. RÉSERVATIONS
-  const fetchReservations = async (idGest) => {
+  const fetchReservations = async () => { // Plus besoin de idGest ici
       try {
           const token = sessionStorage.getItem('token');
-          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/manager/reservations/${idGest}`, {
+          // ❌ AVANT : /api/manager/reservations/${idGest}
+          // ✅ APRÈS : /api/manager/reservations
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/manager/reservations`, {
               headers: { Authorization: `Bearer ${token}` }
           });
           setReservations(res.data);
@@ -238,10 +241,12 @@ function DashboardManager() {
   };
 
   // 3. REVENUS
-  const fetchEarnings = async (idGest) => {
+  const fetchEarnings = async () => { // Plus besoin de idGest ici
       try {
           const token = sessionStorage.getItem('token');
-          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/manager/earnings/${idGest}`, {
+          // ❌ AVANT : /api/manager/earnings/${idGest}
+          // ✅ APRÈS : /api/manager/earnings
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/manager/earnings`, {
               headers: { Authorization: `Bearer ${token}` }
           });
           setEarnings(res.data);
