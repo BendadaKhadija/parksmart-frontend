@@ -535,38 +535,50 @@ const handleUpdateUser = async () => {
         alert(t('alert_profile_update_error'));
     }
 };
-  const handleUpdatePassword = async () => {
-      if(passwordData.new !== passwordData.confirm) { alert(t('alert_pass_mismatch')); return; }
+ const handleUpdatePassword = async () => {
+    if(passwordData.new !== passwordData.confirm) { 
+        alert(t('alert_pass_mismatch')); 
+        return; 
+    }
       
-      try {
-          // Utilisation de la route générique de mise à jour utilisateur avec le champ password
-          const formData = new FormData();
-          const storedUser = JSON.parse(sessionStorage.getItem('user'));
-          const idUser = storedUser?.id_cond || storedUser?.id || storedUser?.id_utilisateur;
+    try {
+        const formData = new FormData();
+        const storedUser = JSON.parse(sessionStorage.getItem('user'));
+        const idUser = storedUser?.id_cond || storedUser?.id || storedUser?.id_utilisateur;
           
-          if (idUser) formData.append('id_user', idUser);
-          formData.append('password', passwordData.new); // On envoie le nouveau mot de passe
-          // On peut aussi envoyer currentPassword si le backend le demande pour vérification
-          formData.append('currentPassword', passwordData.current); 
+        if (idUser) formData.append('id_user', idUser);
 
-          const token = sessionStorage.getItem('token');
-          // On tente d'utiliser la route de mise à jour globale qui existe (POST /api/profile)
-          await axios.put(`${import.meta.env.VITE_API_URL}/api/profile`, formData, { 
-              headers: { 
-                  Authorization: `Bearer ${token}`,
-                  'Content-Type': 'multipart/form-data'
-              } 
-          });
+        // --- CORRECTION : AJOUT DES DONNÉES ACTUELLES ---
+        // On renvoie les données existantes au backend pour éviter l'erreur "Column cannot be null"
+        if (storedUser?.nom) formData.append('nom', storedUser.nom);
+        if (storedUser?.prenom) formData.append('prenom', storedUser.prenom);
+        if (storedUser?.email) formData.append('email', storedUser.email);
+        if (storedUser?.telephone) formData.append('telephone', storedUser.telephone);
+        // ------------------------------------------------
 
-          alert(t('alert_pass_updated')); 
-          setProfilePage('main'); 
-          setPasswordData({ current: '', new: '', confirm: '' });
+        // On envoie les mots de passe
+        formData.append('password', passwordData.new); 
+        formData.append('currentPassword', passwordData.current); 
 
-      } catch (error) { 
-          console.error("Erreur Password:", error);
-          alert("❌ " + (error.response?.data?.message || t('alert_pass_update_error'))); 
-      }
-  };
+        const token = sessionStorage.getItem('token');
+        
+        // Requête à l'API
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/profile`, formData, { 
+            headers: { 
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            } 
+        });
+
+        alert(t('alert_pass_updated')); 
+        setProfilePage('main'); 
+        setPasswordData({ current: '', new: '', confirm: '' });
+
+    } catch (error) { 
+        console.error("Erreur Password:", error);
+        alert("❌ " + (error.response?.data?.message || t('alert_pass_update_error'))); 
+    }
+};
   
   const performLogout = () => { sessionStorage.clear(); window.location.href = '/signin'; };
   const handleChange = (e) => setUserData({ ...userData, [e.target.name]: e.target.value });
