@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Bell, Clock, MapPin, AlertCircle, CheckCircle, Car, CreditCard, ShieldAlert } from 'lucide-react';
 import '../styles/Notifications.css';
 
-const Notifications = ({ onUnreadCountChange, activeReservation }) => {
+const Notifications = ({ onUnreadCountChange, activeReservation, parkingTarif = 10 }) => {
   const [notifications, setNotifications] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -226,7 +226,7 @@ const Notifications = ({ onUnreadCountChange, activeReservation }) => {
               {/* INDICATION DE FACTURATION (Temps réel) */}
               <div className="alert-box" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'white', marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}><AlertCircle size={16} color="#4ade80" /> Tarif estimé :</span>
-                <span style={{fontWeight: 'bold', fontSize: '1.1rem'}}>{((elapsedTime / 3600) * 4).toFixed(2)} DH</span>
+                <span style={{fontWeight: 'bold', fontSize: '1.1rem'}}>{((elapsedTime / 3600) * parseFloat(parkingTarif)).toFixed(2)} DH</span>
               </div>
            </div> 
         )}

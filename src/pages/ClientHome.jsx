@@ -1362,7 +1362,13 @@ const renderProfileContent = () => {
           {activeTab === 'notif' && (
             <Notification 
               onUnreadCountChange={setUnreadNotifications} 
-              activeReservation={currentReservation} 
+              activeReservation={currentReservation}
+              parkingTarif={
+                selectedParking?.tarif_heure || 
+                selectedParking?.tarif_horaire ||
+                (currentReservation && parkings.find(p => p.id_park === currentReservation.id_park)?.tarif_heure) ||
+                10
+              }
             />
           )}
           {activeTab === 'profile' && renderProfileContent()}
