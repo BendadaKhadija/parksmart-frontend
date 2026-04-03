@@ -439,7 +439,8 @@ useEffect(() => {
           });
 
           // Calculer le montant réel basé sur le temps écoulé et le tarif
-          const tempsEcouleHeures = (currentReservation.temps_ecoule_secondes || 0) / 3600;
+          const tempsEcouleSecondes = currentReservation.temps_ecoule_secondes || 0;
+          const tempsEcouleHeures = tempsEcouleSecondes / 3600;
           const tarif = parseFloat(
             selectedParking?.tarif_heure || 
             selectedParking?.tarif_horaire ||
@@ -447,15 +448,22 @@ useEffect(() => {
             10
           );
           
-          const montantCalcule = (tempsEcouleHeures * tarif).toFixed(2);
+          // Appliquer le minimum d'1 heure (comme le backend)
+          const heuresFacturees = Math.max(1, Math.ceil(tempsEcouleHeures * 4) / 4); // Arrondir à 0.25h (15 min)
+          const montantCalcule = (heuresFacturees * tarif).toFixed(2);
           const montantBackend = res.data.montant || montantCalcule;
           
-          const tempsMinutes = Math.floor((currentReservation.temps_ecoule_secondes || 0) / 60);
-          const tempsSecondes = (currentReservation.temps_ecoule_secondes || 0) % 60;
+          const tempsMinutes = Math.floor(tempsEcouleSecondes / 60);
+          const tempsSecondes = tempsEcouleSecondes % 60;
+          const tempsHeures = Math.floor(tempsEcouleSecondes / 3600);
+          
+          const affichageTemps = tempsHeures > 0 
+            ? `${tempsHeures}h ${tempsMinutes % 60}m ${tempsSecondes}s`
+            : `${tempsMinutes}m ${tempsSecondes}s`;
           
           alert(
             t('alert_payment_validated', { amount: montantBackend }) + 
-            `\n\n📊 Détail:\nTemps: ${tempsMinutes}m ${tempsSecondes}s\nTarif: ${tarif} DH/h\nCalcul: (${tempsEcouleHeures.toFixed(4)}h × ${tarif}) = ${montantCalcule} DH`
+            `\n\n📊 Détail de facturation:\nTemps: ${affichageTemps}\nTarif: ${tarif} DH/h\nMinimum horaire: 1 heure\nHeures facturées: ${heuresFacturees}h\nMontant: ${heuresFacturees}h × ${tarif} DH/h = ${montantCalcule} DH`
           );
 
           // RESET
