@@ -477,7 +477,7 @@ const handleUpdateUser = async () => {
         
         const url = `${import.meta.env.VITE_API_URL}/api/profile`;
         
-        const response = await axios.post(url, formData, {
+        const response = await axios.put(url, formData, {
             headers: {
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
                 'Content-Type': 'multipart/form-data'
