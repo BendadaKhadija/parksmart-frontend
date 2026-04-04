@@ -328,17 +328,28 @@ function DashboardManager() {
   };
 
   // --- ACTIONS ---
-
-  const handleDeleteParking = async (id) => {
+const handleDeleteParking = async (id) => {
       if(!window.confirm("Supprimer ce parking définitivement ?")) return;
+      
       try {
-          await axios.delete(`${import.meta.env.VITE_API_URL}/api/parkings/${id}`);
+          // 1. On récupère le token (assurez-vous que c'est bien le nom sous lequel vous l'avez sauvegardé lors du login)
+          const token = localStorage.getItem('token'); 
+
+          // 2. On envoie la requête DELETE avec le token dans les headers
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/parkings/${id}`, {
+              headers: {
+                  Authorization: `Bearer ${token}`
+              }
+          });
+
+          // 3. Si le serveur répond avec succès (pas d'erreur), on met à jour la liste
           setMyParkings(myParkings.filter(p => (p.id_park || p.id) !== id));
+          
       } catch (error) {
+          console.error("Erreur lors de la suppression :", error.response?.data || error.message);
           alert("❌ Erreur suppression.");
       }
   };
-
   const openEditParkingModal = (parking) => {
       setEditingParking({
           ...parking,
