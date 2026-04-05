@@ -332,17 +332,17 @@ const handleDeleteParking = async (id) => {
       if(!window.confirm("Supprimer ce parking définitivement ?")) return;
       
       try {
-          // 1. On récupère le token (assurez-vous que c'est bien le nom sous lequel vous l'avez sauvegardé lors du login)
-          const token = localStorage.getItem('token'); 
+          // 1. On va chercher le token dans le sessionStorage !
+          const token = sessionStorage.getItem('token'); 
 
-          // 2. On envoie la requête DELETE avec le token dans les headers
+          // 2. On envoie la requête
           await axios.delete(`${import.meta.env.VITE_API_URL}/api/parkings/${id}`, {
               headers: {
                   Authorization: `Bearer ${token}`
               }
           });
 
-          // 3. Si le serveur répond avec succès (pas d'erreur), on met à jour la liste
+          // 3. Mise à jour de l'affichage
           setMyParkings(myParkings.filter(p => (p.id_park || p.id) !== id));
           
       } catch (error) {
