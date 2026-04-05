@@ -397,12 +397,15 @@ if (!reservation) {
         const montant = parseFloat(billData.montant || 0);
         const total = montant.toFixed(2);
 
-        // 👇 NOUVEAU : On prépare les données à envoyer au composant QR Code
+        // On prépare les données à envoyer au reçu
         const recuData = {
             reservationId: confirmedId || reservation.id_resa || reservation.id,
-            nomConducteur: reservation.nom_client || "Client", // Changez si le nom est différent dans votre BDD
+            nomConducteur: reservation.nom_client || reservation.nom || "Client inconnu", // 👤 Nom du conducteur
             immatriculation: reservation.immatriculation || "Véhicule",
-            nomParking: reservation.nom_parking || "Parking Smart",
+            nomParking: reservation.nom_parking || "Parking Smart", // 🅿️ Nom du parking
+            
+            place: reservation.numero_place || reservation.place || "Place standard", 
+
             date: new Date().toLocaleDateString(),
             heure: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
             prix: total

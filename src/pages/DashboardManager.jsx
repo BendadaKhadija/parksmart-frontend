@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/DashboardManager.css'; 
 import ManagerNotifications from './ManagerNotifications';
+import ValidationSortieManager from './ValidationSortieManager';
+import { Html5Qrcode } from "html5-qrcode";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function DashboardManager() {
@@ -243,7 +245,6 @@ function DashboardManager() {
   const fetchEarnings = async () => { // Plus besoin de idGest ici
       try {
           const token = sessionStorage.getItem('token');
-          // ❌ AVANT : /api/manager/earnings/${idGest}
           // ✅ APRÈS : /api/manager/earnings
           const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/manager/earnings`, {
               headers: { Authorization: `Bearer ${token}` }
@@ -462,13 +463,56 @@ const handleDeleteParking = async (id) => {
   };
 
   useEffect(() => {
-    if (activeTab === 'scanner' && navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => { if(videoRef.current) videoRef.current.srcObject = stream; })
-        .catch(err => console.log(err));
-    }
-  }, [activeTab]);
+    let html5QrCode;
 
+    // On lance le scanner SEULEMENT si on est sur l'onglet 'scanner' 
+    // ET qu'on n'a pas déjà scanné un code (!scanData)
+    if (activeTab === 'scanner' && !scanData) {
+        
+        // "qr-reader" sera l'ID de la div où s'affichera la vidéo
+        html5QrCode = new Html5Qrcode("qr-reader");
+        
+        html5QrCode.start(
+            { facingMode: "environment" }, // Utilise la caméra arrière par défaut
+            {
+                fps: 10,    // Nombre d'analyses par seconde
+                qrbox: { width: 250, height: 250 } // Le carré de scan au milieu
+            },
+            (decodedText) => {
+                // 🎉 BINGO ! UN QR CODE A ÉTÉ LU !
+                console.log("Code lu :", decodedText);
+                
+                // 1. On éteint la caméra
+                html5QrCode.stop().then(() => {
+                    
+                    // 2. On affiche l'écran de validation
+                    // NOTE : "decodedText" contient ce qui était caché dans le QR code.
+                    // Plus tard, on fera un axios.get pour récupérer les vraies infos en base de données.
+                    // Pour l'instant, on simule l'affichage avec ce qu'on vient de lire :
+                    setScanData({
+                        reservationId: decodedText, 
+                        nomConducteur: "Recherche en cours...", 
+                        place: "?",
+                        prix: "..."
+                    });
+
+                }).catch(err => console.error("Erreur d'arrêt:", err));
+            },
+            (errorMessage) => {
+                // Ignorez ça, c'est juste la caméra qui dit "Je n'ai rien trouvé pour l'instant"
+            }
+        ).catch((err) => {
+            console.error("Impossible de lancer la caméra :", err);
+        });
+    }
+
+    // Sécurité : On éteint la caméra si l'utilisateur change d'onglet
+    return () => {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(console.error);
+        }
+    };
+  }, [activeTab, scanData]);
 
   if (loading) return <div className="loading-screen">Chargement...</div>;
   if (!user) return null;
@@ -476,6 +520,7 @@ const handleDeleteParking = async (id) => {
   const totalPlaces = myParkings.reduce((acc, curr) => {
     return acc + ((parseInt(curr.nb_rangees) * parseInt(curr.nb_places_par_rangee)) || curr.total_places || 0);
   }, 0);
+  const [scanData, setScanData] = useState(null);
   return (
     <div className={`dashboard-container ${showProfileModal || showLogoutModal || showEditParkingModal || showReviewsModal ? 'blur-background' : ''}`}>
       
@@ -882,10 +927,18 @@ const handleDeleteParking = async (id) => {
         {activeTab === 'scanner' && (
              <div className="card-white centered-scan">
                  <h3>Scanner de Contrôle</h3>
-                 <div className="scanner-frame">
-                    <video ref={videoRef} autoPlay muted></video>
-                    <div className="scanner-overlay"></div>
-                 </div>
+                 
+                 {scanData ? (
+                     <ValidationSortieManager 
+                         scanData={scanData} 
+                         onClose={() => setScanData(null)} 
+                     />
+                 ) : (
+                     <div className="scanner-frame" style={{ border: 'none', background: 'transparent' }}>
+                         {/* C'est ICI que la bibliothèque va injecter la vidéo magiquement */}
+                         <div id="qr-reader" style={{ width: "100%", borderRadius: "12px", overflow: "hidden" }}></div>
+                     </div>
+                 )}
              </div>
         )}
 

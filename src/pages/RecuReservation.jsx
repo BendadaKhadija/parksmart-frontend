@@ -2,7 +2,7 @@ import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 
 const RecuReservation = ({ reservationData }) => {
-  // Styles CSS intégrés (pour tout avoir dans un seul fichier)
+  // Styles CSS intégrés 
   const styles = {
     container: {
       maxWidth: '400px',
@@ -152,6 +152,12 @@ const RecuReservation = ({ reservationData }) => {
           <div style={styles.row}>
             <span style={styles.label}>Parking:</span>
             <span style={styles.value}>{reservationData.nomParking}</span>
+          </div>
+          <div style={styles.row}>
+            <span style={styles.label}>Place Attribuée:</span>
+            <span style={{ ...styles.value, color: '#76ae94', fontSize: '18px', backgroundColor: '#ecfdf5', padding: '2px 8px', borderRadius: '4px' }}>
+              {reservationData.place}
+            </span>
           </div>
           <div style={styles.row}>
             <span style={styles.label}>Date & Heure:</span>
