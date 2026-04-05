@@ -95,5 +95,5 @@ const ValidationSortieManager = ({ scanData, onClose }) => {
   );
 };
 
-// C'est cette ligne qui manquait à votre application !
+// C'est cette ligne qui manquait à  votre application !
 export default ValidationSortieManager;
