@@ -400,17 +400,22 @@ if (!reservation) {
         // On prépare les données à envoyer au reçu
         const recuData = {
             reservationId: confirmedId || reservation.id_resa || reservation.id,
-            nomConducteur: reservation.nom_client || reservation.nom || "Client inconnu", // 👤 Nom du conducteur
-            immatriculation: reservation.immatriculation || "Véhicule",
-            nomParking: reservation.nom_parking || "Parking Smart", // 🅿️ Nom du parking
             
-            place: reservation.numero_place || reservation.place || "Place standard", 
+            // 👤 On teste toutes les clés possibles venant de la BDD pour le nom
+            nomConducteur: reservation.nom_client || reservation.nom_cond || reservation.nom || reservation.prenom || "Conducteur", 
+            
+            immatriculation: reservation.immatriculation || reservation.plaque || "Véhicule",
+            
+            nomParking: reservation.nom_parking || "ParkSmart Fès", 
+            
+            // 🅿️ On teste les clés possibles pour la place
+            place: reservation.numero_place || reservation.place || reservation.id_place || "Standard", 
 
             date: new Date().toLocaleDateString(),
             heure: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
             prix: total
         };
-
+        console.log("DEBUG RESERVATION :", reservation);
         return (
             <div style={styles.container}>
                  <div style={styles.header}>
