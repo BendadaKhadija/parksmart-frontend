@@ -480,24 +480,31 @@ const handleDeleteParking = async (id) => {
                 qrbox: { width: 250, height: 250 } // Le carré de scan au milieu
             },
             (decodedText) => {
-                // 🎉 BINGO ! UN QR CODE A ÉTÉ LU !
-                console.log("Code lu :", decodedText);
-                
-                // 1. On éteint la caméra
-                html5QrCode.stop().then(() => {
-                    
-                    // 2. On affiche l'écran de validation
-                    // NOTE : "decodedText" contient ce qui était caché dans le QR code.
-                    // Plus tard, on fera un axios.get pour récupérer les vraies infos en base de données.
-                    // Pour l'instant, on simule l'affichage avec ce qu'on vient de lire :
-                    setScanData({
-                        reservationId: decodedText, 
-                        nomConducteur: "Recherche en cours...", 
-                        place: "?",
-                        prix: "..."
-                    });
+               // Remplacer votre html5QrCode.stop().then(...) par ceci :
+html5QrCode.stop().then(async () => {
+    try {
+        const token = sessionStorage.getItem('token');
+        
+        // On interroge notre nouvelle route backend !
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservations/${decodedText}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
 
-                }).catch(err => console.error("Erreur d'arrêt:", err));
+        const vraieResa = response.data;
+
+        setScanData({
+            reservationId: vraieResa.id_resa,
+            nomConducteur: vraieResa.nom_client || "Nom inconnu", 
+            place: vraieResa.place,
+            prix: vraieResa.prix_total
+        });
+
+    } catch (error) {
+        console.error("Erreur :", error);
+        alert("Réservation introuvable !");
+        setScanData(null); 
+    }
+}).catch(err => console.error("Erreur d'arrêt:", err));
             },
             (errorMessage) => {
                 // Ignorez ça, c'est juste la caméra qui dit "Je n'ai rien trouvé pour l'instant"
