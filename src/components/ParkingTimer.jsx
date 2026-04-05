@@ -3,10 +3,8 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios';
 import { FaArrowLeft, FaGoogle, FaApple, FaPaypal, FaCreditCard, FaLock } from 'react-icons/fa';
-import { useTranslation } from '../i18n.jsx';
-// Si tu n'utilises pas router, tu peux commenter cette ligne, sinon garde-la :
-// import { useNavigate } from 'react-router-dom'; 
-
+import { useTranslation } from '../i18n.jsx'; // Assurez-vous que ce chemin est aussi correct
+import RecuReservation from '../pages/RecuReservation.jsx';
 function ProcessingStep({ onDone, styles, t }) {
     const onDoneRef = useRef(onDone);
     useEffect(() => {
@@ -393,11 +391,22 @@ if (!reservation) {
         );
     }
 
+    
     // 3. VUE RESUME
     if (step === 'summary' && billData) {
-        // Sécurité si billData.montant est une string ou un nombre
         const montant = parseFloat(billData.montant || 0);
         const total = montant.toFixed(2);
+
+        // 👇 NOUVEAU : On prépare les données à envoyer au composant QR Code
+        const recuData = {
+            reservationId: confirmedId || reservation.id_resa || reservation.id,
+            nomConducteur: reservation.nom_client || "Client", // Changez si le nom est différent dans votre BDD
+            immatriculation: reservation.immatriculation || "Véhicule",
+            nomParking: reservation.nom_parking || "Parking Smart",
+            date: new Date().toLocaleDateString(),
+            heure: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            prix: total
+        };
 
         return (
             <div style={styles.container}>
@@ -406,6 +415,7 @@ if (!reservation) {
                     <h2 style={styles.title}>{t('timer_payment_detail')}</h2>
                 </div>
                 
+                {/* Votre icône de succès */}
                 <div style={{textAlign:'center', margin:'20px 0'}}>
                    <div style={{width:80, height:80, backgroundColor:'#6c9a75', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto'}}>
                         <span style={{color:'white', fontSize:'40px'}}>✓</span>
@@ -413,38 +423,18 @@ if (!reservation) {
                    <h3 style={{marginTop:'15px'}}>{t('timer_payment_review')}</h3>
                 </div>
 
-                <div style={{border:'1px solid #ddd', borderRadius:'12px', padding:'20px'}}>
-                    <h4 style={{marginTop:0}}>{t('timer_order_detail')}</h4>
-                    <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>{t('timer_parking_area')}</span>
-                        <strong>{reservation.nom_parking || "Parking Smart"}</strong>
-                    </div>
-                     <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>{t('timer_duration')}</span>
-                        <strong>{billData.duree}</strong>
-                    </div>
-                     <div style={styles.detailRow}>
-                        <span style={{color:'#777'}}>{t('timer_date')}</span>
-                        <strong>{new Date().toLocaleDateString()}</strong>
-                    </div>
-                    <hr style={{borderTop:'1px dashed #ccc', margin:'15px 0'}}/>
-                    <div style={{display:'flex', justifyContent:'space-between', fontSize:'18px', fontWeight:'bold'}}>
-                        <span>{t('timer_total')}</span>
-                        <span style={{color:'#6c9a75'}}>{total} DH</span>
-                    </div>
-                </div>
+                {/* 👇 NOUVEAU : ON AFFICHE LE REÇU ICI ! */}
+                <RecuReservation reservationData={recuData} />
 
+                {/* Votre bouton de confirmation original */}
                 <button style={styles.mainButton} onClick={handleFinalize} disabled={isLoading}>
                     {isLoading ? t('timer_processing') : t('timer_confirm')}
                 </button>
             </div>
-            
         );
-        
     }
 
     return null;
-    
 };
 
 export default ParkingTimer;

@@ -212,7 +212,6 @@ function DashboardManager() {
   const fetchMyParkings = async () => { // Plus besoin de idGest ici
     try {
       const token = sessionStorage.getItem('token');
-      // ❌ AVANT : /api/my-parkings/${idGest}
       // ✅ APRÈS : /api/my-parkings
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/my-parkings`, {
         headers: { Authorization: `Bearer ${token}` }
