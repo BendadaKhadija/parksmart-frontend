@@ -15,6 +15,7 @@ function DashboardManager() {
   const [activeTab, setActiveTab] = useState('overview'); 
   const [user, setUser] = useState(null); 
   const [loading, setLoading] = useState(true);
+  const [scanData, setScanData] = useState(null);
 
   // Données
   const [myParkings, setMyParkings] = useState([]); 
@@ -520,7 +521,6 @@ const handleDeleteParking = async (id) => {
   const totalPlaces = myParkings.reduce((acc, curr) => {
     return acc + ((parseInt(curr.nb_rangees) * parseInt(curr.nb_places_par_rangee)) || curr.total_places || 0);
   }, 0);
-  const [scanData, setScanData] = useState(null);
   return (
     <div className={`dashboard-container ${showProfileModal || showLogoutModal || showEditParkingModal || showReviewsModal ? 'blur-background' : ''}`}>
       
